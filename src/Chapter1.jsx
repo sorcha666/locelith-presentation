@@ -13,7 +13,7 @@ export function S01Cover() {
             <img src="/locelithai.png" alt="Locelith" style={{ height: 56, objectFit: 'contain' }} />
             <div style={{ width: 1, height: 40, background: 'var(--border2)' }} />
             <div style={{ fontFamily: 'var(--mono)', fontSize: '0.68rem', color: 'var(--t4)', letterSpacing: '0.15em', textTransform: 'uppercase', lineHeight: 1.7 }}>
-              PFE — 2025 / 2026<br />ISITCOM · Hammam Sousse
+              PFA — 2025 / 2026<br />EPI Digital School · Sousse
             </div>
           </div>
         </motion.div>
@@ -33,8 +33,8 @@ export function S01Cover() {
 
         <motion.div variants={vUp} custom={3} style={{ display: 'flex', gap: 40 }}>
           {[
-            { name: 'Oussama Elkamel', role: 'Lead Developer' },
-            { name: 'Sarra Chtioui', role: 'AI Pipeline Engineer' },
+            { name: 'Oussama Elkamel', role: '4th Grade Software Engineer' },
+            { name: 'Sarra Chtioui', role: '4th Grade AI Engineer' },
           ].map(a => (
             <div key={a.name}>
               <div style={{ fontWeight: 700, color: 'var(--t1)', marginBottom: 3 }}>{a.name}</div>
@@ -148,9 +148,9 @@ export function S05Host() {
         </motion.div>
         <motion.div variants={vUp} custom={1} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[
-            { label: 'Institution', val: 'ISITCOM — Institut Supérieur d\'Informatique et des Technologies de la Communication de Hammam Sousse' },
-            { label: 'Degree', val: 'Master 2 — Informatique et Multimédia' },
-            { label: 'Internship Period', val: 'February — July 2026 · 24 weeks' },
+            { label: 'Institution', val: 'EPI Digital School — École Polytechnique Internationale, Sousse' },
+            { label: 'Degree', val: 'End-of-Year Project (PFA) — Software & AI Engineering · 4th Grade' },
+            { label: 'Project Period', val: 'February — July 2026 · 24 weeks' },
             { label: 'Methodology', val: 'Scrumban · 12 sprints · Kanban flow · WIP limit 2' },
             { label: 'Supervisors', val: 'Academic & industrial joint supervision' },
           ].map((item, i) => (

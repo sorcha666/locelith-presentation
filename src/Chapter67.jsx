@@ -214,7 +214,7 @@ export function S32Closing() {
         </motion.div>
         <motion.div variants={vUp} custom={3}>
           <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--t1)', marginBottom: 8 }}>Oussama Elkamel &amp; Sarra Chtioui</div>
-          <div style={{ color: 'var(--t4)', fontSize: '0.85rem', marginBottom: 28 }}>ISITCOM · Synervy Technologies · PFE 2025–2026</div>
+          <div style={{ color: 'var(--t4)', fontSize: '0.85rem', marginBottom: 28 }}>EPI Digital School · Synervy Technologies · PFA 2025–2026</div>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
             <span className="chip chip-blue">locelith.dev</span>
             <span className="chip chip-purple">@locelith/core</span>
