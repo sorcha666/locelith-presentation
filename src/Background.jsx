@@ -30,6 +30,8 @@ const TUBE_LEN    = 2200;  // depth tile — lots of breathing room
 const FOV_T       = 560;
 const FLY_SPEED   = 0.55;  // slightly faster for stronger 3D immersion
 const T_NEIGH     = 2;     // tunnel neighbours — sparse, clean
+const FADE_NEAR   = 250;   // fade-out zone: node vanishes before reaching camera
+const FADE_FAR    = 300;   // fade-in zone: node appears gradually from far end
 
 export default function Background() {
   const canvasRef = useRef(null);
@@ -156,18 +158,23 @@ export default function Background() {
         const facS   = df(rz);
 
         // Tunnel projection — tile Z, nodes at TUBE_R from center
-        const rawZ   = ((n.tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
-        const depthT = rawZ + 50;
-        const scaleT = FOV_T / (FOV_T + depthT);
-        const sxT    = W*0.5 + n.tx*scaleT;
-        const syT    = H*0.5 + n.ty*scaleT;
-        const facT   = Math.max(0, 1 - depthT/TUBE_LEN);
+        const rawZ     = ((n.tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
+        const depthT   = rawZ + 50;
+        const scaleT   = FOV_T / (FOV_T + depthT);
+        const sxT      = W*0.5 + n.tx*scaleT;
+        const syT      = H*0.5 + n.ty*scaleT;
+        const facT     = Math.max(0, 1 - depthT/TUBE_LEN);
+        // Smooth fade at both ends — hides the recycle teleport
+        const nearFade = Math.min(1, rawZ / FADE_NEAR);           // 0 when just recycled near
+        const farFade  = Math.min(1, (TUBE_LEN - rawZ) / FADE_FAR); // 0 when about to recycle far
+        const tFade    = Math.min(nearFade, farFade);
 
         const fac = facS*(1-tunnelBlend) + facT*tunnelBlend;
+        const tunnelFade = tFade;  // stored for draw step
         return {
           sx: sxS*(1-tunnelBlend) + sxT*tunnelBlend,
           sy: syS*(1-tunnelBlend) + syT*tunnelBlend,
-          fac, rz, depthT, scaleT,
+          fac, rz, depthT, scaleT, tunnelFade,
         };
       });
 
@@ -176,13 +183,17 @@ export default function Background() {
         edgeList.forEach(([i,j]) => {
           const a=projected[i], b=projected[j];
           if(!a||!b) return;
+          let edgeFade = 1;
 
-          // Skip wrap-around edges: if both nodes have very different effective Z,
-          // one has recycled and the other hasn't — would draw a backward line
+          // Skip if either node is in the fade zone (avoids flicker on edges too)
           if (isTunnelEdge && tunnelBlend > 0.3) {
             const rawZa = ((nodes[i].tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
             const rawZb = ((nodes[j].tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
             if (Math.abs(rawZa - rawZb) > TUBE_LEN * 0.38) return;
+            // Also fade edge when either endpoint is fading
+            const fa = Math.min(Math.min(1, rawZa/FADE_NEAR), Math.min(1,(TUBE_LEN-rawZa)/FADE_FAR));
+            const fb = Math.min(Math.min(1, rawZb/FADE_NEAR), Math.min(1,(TUBE_LEN-rawZb)/FADE_FAR));
+            edgeFade = Math.min(fa, fb);
           }
 
           const avg   = (a.fac+b.fac)/2;
@@ -191,11 +202,11 @@ export default function Background() {
           const alpha = isTunnelEdge
             ? (0.06 + avg*0.56) * alpha_mult
             : (0.22 + avg*0.22) * alpha_mult;
-          if(alpha < 0.04) return;
+          if(alpha * edgeFade < 0.04) return;
           ctx.beginPath();
           ctx.moveTo(a.sx,a.sy);
           ctx.lineTo(b.sx,b.sy);
-          ctx.strokeStyle = `hsla(${215+(1-avg)*25},68%,55%,${alpha.toFixed(2)})`;
+          ctx.strokeStyle = `hsla(${215+(1-avg)*25},68%,55%,${(alpha*edgeFade).toFixed(2)})`;
           ctx.lineWidth   = 0.5 + avg*1.2;
           ctx.stroke();
         });
@@ -209,8 +220,9 @@ export default function Background() {
         .map((n,i)=>({n,p:projected[i]}))
         .sort((a,b)=>a.p.fac-b.p.fac)
         .forEach(({n,p}) => {
-          const alpha = 0.05 + p.fac*0.92;
-          const dotR  = 0.8 + p.fac*8.0;
+          const fade  = tunnelBlend > 0.3 ? p.tunnelFade : 1;
+          const alpha = (0.05 + p.fac*0.92) * fade;
+          const dotR  = (0.8 + p.fac*8.0) * (0.4 + 0.6*fade);
 
           if(p.fac > 0.6) {
             const pulse = 0.55+0.45*Math.sin(t*1.7+n.phase);
