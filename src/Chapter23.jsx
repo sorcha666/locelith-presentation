@@ -161,17 +161,18 @@ export function S12Actors() {
       <div className="cols-2" style={{ gap: 48, alignItems: 'center' }}>
         <motion.div variants={vUp} custom={0}>
           <div className="eyebrow">System Actors</div>
-          <h2 className="title-md" style={{ marginBottom: 28 }}>Two roles.<br />Distinct responsibilities.</h2>
+          <h2 className="title-md" style={{ marginBottom: 28 }}>Three roles.<br />Distinct responsibilities.</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {[
-              { role: 'Developer', color: 'var(--blue)', actions: ['Register and subscribe', 'Run CLI translation pipeline', 'Manage API keys', 'Integrate SDK into apps', 'Monitor usage analytics', 'Revert localisation changes'] },
-              { role: 'Administrator', color: 'var(--purple)', actions: ['Manage user accounts', 'Configure Stripe subscriptions', 'Monitor SLM inference engine', 'Manage web scraping pipeline', 'Enforce GDPR data erasure'] },
+              { role: 'Developer', color: 'var(--blue)', actions: ['Register & subscribe to plans', 'Run CLI translation pipeline', 'Manage API keys via dashboard', 'Integrate SDK into production apps'] },
+              { role: 'Administrator', color: 'var(--purple)', actions: ['Manage user subscriptions (Stripe)', 'Monitor system performance', 'Ensure platform security', 'Handle GDPR data compliance'] },
+              { role: 'AI Engineer', color: 'var(--cyan)', actions: ['Monitor SLM inference metrics', 'Manage translation datasets', 'Evaluate BLEU and chrF metrics'] },
             ].map(a => (
-              <div key={a.role} className="card" style={{ borderLeft: `3px solid ${a.color}`, padding: '20px 24px' }}>
-                <div style={{ fontWeight: 800, color: a.color, fontSize: '1rem', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{a.role}</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div key={a.role} className="card" style={{ borderLeft: `3px solid ${a.color}`, padding: '16px 20px' }}>
+                <div style={{ fontWeight: 800, color: a.color, fontSize: '0.9rem', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{a.role}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {a.actions.map(ac => (
-                    <div key={ac} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.8rem', color: 'var(--t3)' }}>
+                    <div key={ac} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.78rem', color: 'var(--t3)' }}>
                       <div style={{ width: 4, height: 4, borderRadius: '50%', background: a.color, flexShrink: 0 }} />
                       {ac}
                     </div>
@@ -186,12 +187,12 @@ export function S12Actors() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[
               { uc: 'UC-01', name: 'Execute Translation Pipeline', actor: 'Developer', priority: 'Critical' },
-              { uc: 'UC-02', name: 'Subscribe to Plan', actor: 'Developer', priority: 'High' },
+              { uc: 'UC-02', name: 'Subscribe to Plan (Stripe)', actor: 'Developer', priority: 'High' },
               { uc: 'UC-03', name: 'Manage API Keys', actor: 'Developer', priority: 'High' },
-              { uc: 'UC-04', name: 'Revert Localisation', actor: 'Developer', priority: 'High' },
-              { uc: 'UC-05', name: 'Configure SLM Engine', actor: 'Administrator', priority: 'High' },
-              { uc: 'UC-06', name: 'GDPR Data Erasure', actor: 'Administrator', priority: 'Critical' },
-              { uc: 'UC-07', name: 'Monitor Analytics', actor: 'Both', priority: 'Medium' },
+              { uc: 'UC-04', name: 'Manage Users & Subscriptions', actor: 'Administrator', priority: 'Critical' },
+              { uc: 'UC-05', name: 'Monitor Global Analytics', actor: 'Administrator', priority: 'Medium' },
+              { uc: 'UC-06', name: 'Monitor Model Health', actor: 'AI Engineer', priority: 'High' },
+              { uc: 'UC-07', name: 'Generate AI Datasets', actor: 'AI Engineer', priority: 'Medium' },
             ].map(u => (
               <div key={u.uc} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '10px 14px', borderRadius: 10, background: 'var(--surface)', border: '1px solid var(--border)' }}>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', width: 48, flexShrink: 0 }}>{u.uc}</span>
@@ -217,12 +218,12 @@ export function S13NFR() {
         </motion.div>
         <div className="cols-3" style={{ gap: 16 }}>
           {[
-            { title: 'Performance', color: 'var(--blue)', items: ['<100 ms for cached string resolution', '<60 s full pipeline on medium app', 'Parallel translation batching'] },
-            { title: 'Security', color: 'var(--purple)', items: ['HMAC-SHA256 request signing', 'bcrypt password hashing', 'JWT session management', 'PII sanitisation before inference'] },
-            { title: 'Privacy', color: 'var(--cyan)', items: ['GDPR compliant by design', 'Data minimisation principle', 'Right to erasure (cascading)', 'No source code stored'] },
-            { title: 'Availability', color: 'var(--green)', items: ['99.5% monthly uptime target', 'Health check endpoints', 'Groq Cloud fallback layer', 'Railway auto-restart policy'] },
-            { title: 'Maintainability', color: 'var(--amber)', items: ['Modular AST parser architecture', 'Framework adapter pattern', 'Versioned SDK releases', 'OpenAPI documentation'] },
-            { title: 'Extensibility', color: 'var(--purple-light)', items: ['Vue.js & Svelte support ready', 'Plugin-based AST visitors', 'New language pair training', 'MCP tool interface'] },
+            { title: 'Performance', color: 'var(--blue)', items: ['<100 ms cached string resolution', '<60 s full pipeline on medium app', 'Parallel translation batching'] },
+            { title: 'Security', color: 'var(--purple)', items: ['HMAC-SHA256 request signing', 'bcrypt password hashing', 'JWT session management'] },
+            { title: 'Privacy (GDPR)', color: 'var(--cyan)', items: ['Data minimisation principle', 'PII masked prior to SLM translation', 'Right to erasure supported'] },
+            { title: 'Availability', color: 'var(--green)', items: ['Business API high uptime', 'Typical SaaS platform reliability', 'Railway auto-restart policy'] },
+            { title: 'Extensibility', color: 'var(--amber)', items: ['Modular AST parser architecture', 'Ready for Vue.js & Svelte', 'New language pair training'] },
+            { title: 'Usability & Compat.', color: 'var(--purple-light)', items: ['Simple CLI interface', 'Intuitive dashboard', 'Consistent across React/Angular/Vanilla'] },
           ].map((d, i) => (
             <motion.div key={d.title} variants={vUp} custom={i + 1} className="card" style={{ borderTop: `2px solid ${d.color}` }}>
               <div style={{ fontWeight: 800, color: d.color, fontSize: '0.9rem', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{d.title}</div>
