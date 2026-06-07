@@ -159,6 +159,11 @@ body {
   pointer-events: none;
 }
 
+/* Remove glow from the main cover page */
+#s01 .slide-inner::before {
+  display: none;
+}
+
 /* Slide background variants */
 .slide-light   { background: transparent; }
 .slide-lighter { background: rgba(250,250,250,0.4); }
