@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import { AnimatePresence, motion } from 'framer-motion';
 import Background from './Background';
+import NotesPanel from './Notes';
 
 import { S01Cover, S02Ch1Intro, S03Stat, S04Tax, S05Host, S06Objectives } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S09Comparison, S10Problem, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
@@ -54,6 +55,7 @@ const CONTENT_TOTAL  = CONTENT_SLIDES.length;
 export default function App() {
   const [active, setActive] = useState(0);
   const lenisRef = useRef(null);
+  const [showNotes, setShowNotes] = useState(false);
 
   useEffect(() => {
     // smoothWheel: false — we handle wheel events ourselves for snap navigation
@@ -151,6 +153,8 @@ export default function App() {
   // ── Keyboard navigation ──
   useEffect(() => {
     const onKey = e => {
+      if (e.key === 'n' || e.key === 'N') { setShowNotes(v => !v); return; }
+      if (e.key === 'Escape') { setShowNotes(false); return; }
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(active + 1, SLIDES.length - 1));
       if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(active - 1, 0));
     };
@@ -195,6 +199,11 @@ export default function App() {
           );
         })}
       </nav>
+
+      {/* Speaker notes panel — press N */}
+      {showNotes && (
+        <NotesPanel slideId={SLIDES[active]?.id} onClose={() => setShowNotes(false)} />
+      )}
 
       {/* All slides */}
       <main>
