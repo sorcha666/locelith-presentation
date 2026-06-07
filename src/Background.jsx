@@ -22,7 +22,7 @@ const NODE_COUNT  = 90;
 
 // Sphere
 const FOV_S       = 1200;
-const S_NEIGH     = 3;     // sphere neighbours
+const S_NEIGH     = 5;     // sphere neighbours — complete geodesic mesh
 
 // Tunnel
 const TUBE_R      = 320;   // all nodes on this radius → perfect circle ring
@@ -186,7 +186,7 @@ export default function Background() {
           }
 
           const avg   = (a.fac+b.fac)/2;
-          const alpha = (0.04 + avg*0.55) * alpha_mult;
+          const alpha = (0.10 + avg*0.52) * alpha_mult;
           if(alpha < 0.04) return;
           ctx.beginPath();
           ctx.moveTo(a.sx,a.sy);
