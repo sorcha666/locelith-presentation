@@ -122,9 +122,9 @@ export function S17SDK() {
         </motion.div>
         <div className="cols-2" style={{ gap: 20, marginBottom: 28 }}>
           {[
-            { pkg: '@locelith/core', abbr: 'CLI', color: 'var(--blue)', cmds: ['init', 'translate --langs=fr,es,ar', 'revert --dry-run', 'verify', 'backup'], desc: 'The CLI engine. Powers the entire pipeline from project initialisation to source code rewriting.' },
+            { pkg: '@locelith/core', abbr: 'CLI', color: 'var(--blue)', cmds: ['init', 'run', 'verify', 'revert', 'restore', 'backups', 'clean'], desc: 'The CLI engine. 7 commands. Manages the full pipeline from initialisation to source code rewriting and GDPR cleanup.' },
             { pkg: '@locelith/react', abbr: 'R', color: '#00D8FF', cmds: ['<LocelithProvider>', 'useTranslation()', '<LanguageSelector />'], desc: 'React Context provider + runtime hook. Zero-reload language switching with lazy-loaded locale bundles.' },
-            { pkg: '@locelith/angular', abbr: 'A', color: '#DD0031', cmds: ['locelithTranslate (pipe)', 'LocelithModule', 'Angular DI'], desc: 'Angular module with a declarative template pipe. Fully compatible with Angular dependency injection.' },
+            { pkg: 'locelith-angular', abbr: 'A', color: '#DD0031', cmds: ['locelithTranslate (pipe)', 'LocelithModule', 'Angular DI'], desc: 'Angular module with a declarative template pipe. Fully compatible with Angular dependency injection.' },
             { pkg: '@locelith/vanilla', abbr: 'JS', color: 'var(--amber)', cmds: ['locelith.t("key")', 'ESM + CJS dual output'], desc: 'Zero-dependency JS API. Works in any JavaScript environment including legacy apps.' },
           ].map((s, i) => (
             <motion.div key={s.pkg} variants={vUp} custom={i + 1} className="card" style={{ display: 'flex', gap: 18, padding: '22px 26px', borderTop: `2px solid ${s.color}` }}>

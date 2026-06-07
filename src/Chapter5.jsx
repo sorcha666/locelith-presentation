@@ -1,5 +1,5 @@
 /**
- * CHAPTER 5 — Implementation & AI
+ * CHAPTER 5 — Implementation & AI (corrected to match actual project)
  */
 import { motion } from 'framer-motion';
 import { Slide, vUp, vLeft, vFade, Num, Bar, Type } from './Motion';
@@ -11,7 +11,7 @@ export function S19Ch5Intro() {
         <motion.div variants={vUp} custom={0}>
           <div className="ch-badge">Chapter 05</div>
           <h2 className="title-lg" style={{ marginBottom: 16 }}>Implementation &amp;<br /><span className="grad">AI Development</span></h2>
-          <p className="subtitle" style={{ margin: '0 auto' }}>Engineering execution — from technology choices to model training and production deployment.</p>
+          <p className="subtitle" style={{ margin: '0 auto' }}>Engineering execution — technology choices, pipeline architecture, translation providers, and quality assurance.</p>
         </motion.div>
       </div>
     </Slide>
@@ -20,10 +20,10 @@ export function S19Ch5Intro() {
 
 export function S20TechStack() {
   const stack = [
-    { cat: 'Frontend', color: 'var(--blue)', items: ['Next.js 14', 'React 18', 'TailwindCSS', 'shadcn/ui', 'TanStack Query', 'Recharts'] },
-    { cat: 'Backend', color: 'var(--purple)', items: ['NestJS', 'Prisma ORM', 'PostgreSQL', 'MongoDB', 'JWT', 'bcrypt'] },
-    { cat: 'AI / ML', color: 'var(--amber)', items: ['Python 3.11', 'FastAPI', 'Transformers', 'Unsloth', 'PEFT', 'QLoRA', 'llama.cpp'] },
-    { cat: 'DevOps', color: 'var(--green)', items: ['Docker', 'Railway', 'GitHub Actions', 'Rollup', 'Stripe', 'HMAC'] },
+    { cat: 'SaaS Frontend', color: 'var(--blue)', items: ['Vite', 'React 18', 'TypeScript', 'TailwindCSS', 'shadcn/ui', 'TanStack Query', 'Recharts', 'React Router'] },
+    { cat: 'Business API', color: 'var(--purple)', items: ['Node.js', 'Express', 'Prisma ORM', 'PostgreSQL', 'JWT', 'bcrypt', 'Stripe SDK', 'Zod'] },
+    { cat: 'Vault Server', color: 'var(--amber)', items: ['Node.js', 'Express', 'Babel Parser', 'Puppeteer', 'HMAC-SHA256', 'Alibaba Qwen-plus', 'Groq Cloud'] },
+    { cat: 'SDK & Tooling', color: 'var(--green)', items: ['@locelith/core (CLI)', '@locelith/react', 'locelith-angular', '@locelith/vanilla', 'Rollup', 'MCP SDK', 'Railway'] },
   ];
   return (
     <Slide id="s20" className="slide slide-light">
@@ -56,7 +56,7 @@ export function S21Terminal() {
         <motion.div variants={vUp} custom={0}>
           <div className="eyebrow">Live Pipeline Demo</div>
           <h2 className="title-md" style={{ marginBottom: 16 }}>From source code<br />to <span className="grad">multilingual app.</span><br />One command.</h2>
-          <p className="body-sm">The pipeline detects the framework, parses ASTs, sanitises PII, resolves cache hits, runs SLM inference for misses, and rewrites all source files — fully automated.</p>
+          <p className="body-sm">The pipeline syncs with the Vault Server, scans ASTs, sanitises PII, resolves cache hits, calls Alibaba Qwen-plus for translations, and rewrites all source files — fully automated.</p>
         </motion.div>
         <motion.div variants={vUp} custom={1}>
           <div className="term">
@@ -65,11 +65,11 @@ export function S21Terminal() {
               <span style={{ marginLeft: 10, fontFamily: 'var(--mono)', fontSize: '0.68rem', color: '#64748B' }}>bash — my-react-app</span>
             </div>
             <div className="term-body">
-              <div className="term-line"><span className="tc-prompt">$ </span><span className="tc-cmd"><Type text="npx locelith translate --langs=fr,es,ar,de,zh" delay={500} /></span></div>
+              <div className="term-line"><span className="tc-prompt">$ </span><span className="tc-cmd"><Type text="locelith run" delay={500} /></span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Framework detected: React 18 (JSX)</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">AST scan complete — 247 strings extracted</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">PII sanitised (2 email addresses masked)</span></div>
-              <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Cache: 189 hits · 58 SLM inferences (4.2s)</span></div>
+              <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Translations: Alibaba Qwen-plus · 5 languages</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Source rewrite: t() injected in 34 files</span></div>
               <div className="term-line"><span className="tc-success">✔ Done. Your app now speaks 5 languages.</span></div>
             </div>
@@ -80,177 +80,129 @@ export function S21Terminal() {
   );
 }
 
-export function S22Dataset() {
+/* S22 — Multi-Provider Translation Architecture */
+export function S22Providers() {
   return (
     <Slide id="s22" className="slide slide-light">
-      <div className="cols-2" style={{ gap: 64, alignItems: 'center' }}>
-        <motion.div variants={vUp} custom={0}>
-          <div className="eyebrow">Dataset Construction</div>
-          <h2 className="title-md" style={{ marginBottom: 28 }}>4.5 million UI string pairs.<br /><span className="grad">Built from scratch.</span></h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {[
-              { src: 'OPUS Corpus', pairs: '~4.17M', langs: '112', note: 'GNOME · KDE · Ubuntu · Mozilla open-source UI strings', color: 'var(--blue)' },
-              { src: 'Knowledge Distillation', pairs: '~326K', langs: '10', note: '10 teacher models · back-translation verification · quality filtering', color: 'var(--purple)' },
-              { src: 'Seed Scraping', pairs: '~3K', langs: '—', note: '3,149 UI strings from React component libraries & industry sites', color: 'var(--cyan)' },
-            ].map((d, i) => (
-              <motion.div key={d.src} variants={vLeft} custom={i + 1} style={{ display: 'flex', gap: 16, padding: '16px 20px', borderRadius: 12, background: `${d.color}08`, border: `1px solid ${d.color}20` }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, color: d.color, marginBottom: 4, fontSize: '0.9rem' }}>{d.src}</div>
-                  <div className="body-xs">{d.note}</div>
-                </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.2rem', color: d.color }}>{d.pairs}</div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--t4)' }}>{d.langs} langs</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-        <motion.div variants={vUp} custom={4} style={{ textAlign: 'center' }}>
-          <div style={{ fontFamily: 'var(--sans)', fontSize: '6rem', fontWeight: 900, color: 'var(--blue)', lineHeight: 1, letterSpacing: '-0.05em', marginBottom: 12 }}>
-            <Num value={4.5} suffix="M" />
-          </div>
-          <div style={{ fontSize: '0.9rem', color: 'var(--t3)', marginBottom: 32 }}>training pairs total</div>
-          <div className="cols-2" style={{ gap: 14 }}>
-            {[{ v: 112, l: 'Languages' }, { v: 510, l: 'Benchmark pairs' }, { v: 17, l: 'Language pairs' }, { v: 6, l: 'UI domains' }].map(s => (
-              <div key={s.l} className="card" style={{ padding: '16px', textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--sans)', fontSize: '1.8rem', fontWeight: 900, color: 'var(--blue)', letterSpacing: '-0.03em' }}><Num value={s.v} /></div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--t4)', marginTop: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </Slide>
-  );
-}
-
-export function S23Training() {
-  const steps = [
-    { n: '01', label: 'Base Model Selection', desc: 'Qwen2.5 chosen for multilingual pretraining coverage across 112 languages and efficient inference characteristics', color: 'var(--blue)' },
-    { n: '02', label: 'QLoRA Configuration', desc: 'rank r=64 · α=128 · dropout 0.05 · target: q_proj, v_proj, k_proj · NF4 quantisation', color: 'var(--purple)' },
-    { n: '03', label: 'Unsloth Optimisation', desc: 'packing=True for sequence efficiency · 2× faster training · 60% lower VRAM than standard HF Trainer', color: 'var(--cyan)' },
-    { n: '04', label: 'Training Run', desc: '1 epoch on 500K pairs · gradient accumulation 4 · AdamW 8-bit · cosine LR schedule', color: 'var(--amber)' },
-    { n: '05', label: 'Adapter Merging', desc: 'LoRA weights merged into base for GGUF export · Q4_K_M quantisation for CPU deployment', color: 'var(--green)' },
-  ];
-  return (
-    <Slide id="s23" className="slide slide-lighter">
       <div>
         <motion.div variants={vUp} custom={0} style={{ marginBottom: 40 }}>
-          <div className="eyebrow">Training Methodology</div>
-          <h2 className="title-md">QLoRA — parameter-efficient fine-tuning<br />at <span className="grad-green">5.8 GB VRAM.</span></h2>
+          <div className="eyebrow">Translation Infrastructure</div>
+          <h2 className="title-md">Multi-provider strategy.<br /><span className="grad">Zero single point of failure.</span></h2>
         </motion.div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
-          {steps.map((s, i) => (
-            <motion.div key={s.n} variants={vUp} custom={i + 1} className="card" style={{ borderTop: `2px solid ${s.color}`, padding: '20px 16px' }}>
-              <div style={{ fontFamily: 'var(--sans)', fontSize: '2rem', fontWeight: 900, color: s.color, opacity: 0.15, marginBottom: 8, letterSpacing: '-0.04em' }}>{s.n}</div>
-              <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--t1)', marginBottom: 8 }}>{s.label}</div>
-              <p className="body-xs" style={{ lineHeight: 1.6 }}>{s.desc}</p>
+        <div className="cols-2" style={{ gap: 32, marginBottom: 32 }}>
+          {[
+            { name: 'Alibaba Cloud · Qwen-plus', role: 'Primary provider', color: 'var(--blue)', desc: 'State-of-the-art multilingual model with strong coverage across Arabic, French, German, Italian and 100+ languages. Selected for translation quality and competitive API pricing.', badges: ['qwen-plus', '100+ langs', 'Primary'] },
+            { name: 'Groq Cloud · LLaMA 3.3 70B', role: 'Fallback provider', color: 'var(--purple)', desc: 'Ultra-fast inference via Groq LPU. Activated automatically when Alibaba API is unavailable, ensuring continuous pipeline operation with no manual intervention.', badges: ['llama-3.3-70b', 'Failover', 'Low latency'] },
+          ].map((p, i) => (
+            <motion.div key={p.name} variants={vUp} custom={i + 1} className="card" style={{ borderLeft: `3px solid ${p.color}` }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>{p.role}</div>
+              <div style={{ fontWeight: 700, color: p.color, marginBottom: 12, fontSize: '1rem' }}>{p.name}</div>
+              <p className="body-sm" style={{ marginBottom: 14 }}>{p.desc}</p>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                {p.badges.map(b => <span key={b} className="chip" style={{ color: p.color, borderColor: `${p.color}33`, background: `${p.color}0A`, fontSize: '0.62rem' }}>{b}</span>)}
+              </div>
             </motion.div>
           ))}
         </div>
-      </div>
-    </Slide>
-  );
-}
-
-export function S24Benchmark() {
-  const models = [
-    { name: '0.5B', bleu: 18.2,  chrf: 34.1, vram: 1.2, color: '#94A3B8', selected: false },
-    { name: '1.5B', bleu: 31.4,  chrf: 52.7, vram: 2.1, color: '#C084FC', selected: false },
-    { name: '3B',   bleu: 44.8,  chrf: 66.3, vram: 3.4, color: '#22D3EE', selected: false },
-    { name: '7B',   bleu: 61.34, chrf: 83.42,vram: 5.8, color: '#3B82F6', selected: true  },
-    { name: '14B',  bleu: 65.1,  chrf: 87.2, vram: 11.4,color: '#34D399', selected: false },
-  ];
-  return (
-    <Slide id="s24" className="slide slide-light">
-      <div>
-        <motion.div variants={vUp} custom={0} style={{ marginBottom: 40 }}>
-          <div className="eyebrow">Multi-Scale Benchmark · 510 pairs · sacrebleu</div>
-          <h2 className="title-md">The 7B model delivers<br /><span className="grad">the optimal quality/cost ratio.</span></h2>
-        </motion.div>
-        <div className="cols-2" style={{ gap: 48, alignItems: 'center' }}>
-          <motion.div variants={vUp} custom={1}>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>BLEU Score by model scale</div>
-            {models.map((m, i) => (
-              <motion.div key={m.name} variants={vFade} custom={i + 2} className={`bar-row${m.selected ? ' bar-winner' : ''}`}>
-                <div className="bar-label" style={{ fontWeight: m.selected ? 700 : 400 }}>Qwen-{m.name}</div>
-                <Bar pct={(m.bleu / 100) * 100} color={m.color} />
-                <div className="bar-val">{m.bleu}</div>
-              </motion.div>
-            ))}
-            <div className="rule-grad" />
-            <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>chrF Score</div>
-            {models.map((m, i) => (
-              <motion.div key={m.name + 'c'} variants={vFade} custom={i + 7} className={`bar-row${m.selected ? ' bar-winner' : ''}`}>
-                <div className="bar-label">{m.name}</div>
-                <Bar pct={m.chrf} color={m.color} />
-                <div className="bar-val">{m.chrf}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-          <motion.div variants={vUp} custom={2} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ padding: '28px', borderRadius: 16, background: 'rgba(37,99,235,0.06)', border: '2px solid rgba(37,99,235,0.25)', textAlign: 'center' }}>
-              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--blue)', marginBottom: 8, letterSpacing: '0.1em', fontWeight: 700 }}>SELECTED · QWEN-2.5 7B</div>
-              <div style={{ fontFamily: 'var(--sans)', fontSize: '3.5rem', fontWeight: 900, color: 'var(--blue)', letterSpacing: '-0.04em', lineHeight: 1 }}><Num value={61.34} /></div>
-              <div style={{ color: 'var(--t3)', fontSize: '0.8rem', marginTop: 6, fontWeight: 500 }}>BLEU score</div>
-              <div className="rule-grad" />
-              <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <div><div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.4rem', color: 'var(--purple)' }}><Num value={83.42} /></div><div className="body-xs">chrF</div></div>
-                <div><div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.4rem', color: 'var(--green)' }}>+<Num value={18.4} /></div><div className="body-xs">vs base</div></div>
-                <div><div style={{ fontFamily: 'var(--sans)', fontWeight: 800, fontSize: '1.4rem', color: 'var(--amber)' }}><Num value={5.8} />GB</div><div className="body-xs">VRAM</div></div>
-              </div>
-            </div>
-            <div className="card" style={{ padding: '18px 20px' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--t1)', marginBottom: 8 }}>Why not 14B?</div>
-              <p className="body-xs" style={{ lineHeight: 1.7 }}>The 14B model gains only +3.76 BLEU (+6%) but requires 11.4 GB VRAM — double the cost. The 7B adapter runs on consumer GPUs and CPU via GGUF. The marginal quality gain does not justify the infrastructure overhead for a production SaaS product.</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </Slide>
-  );
-}
-
-export function S25DoublePass() {
-  return (
-    <Slide id="s25" className="slide slide-lighter">
-      <div style={{ maxWidth: 960, margin: '0 auto' }}>
-        <motion.div variants={vUp} custom={0} style={{ marginBottom: 48 }}>
-          <div className="eyebrow">Innovation — Double-Pass Pipeline</div>
-          <h2 className="title-md">Any language to any language.<br /><span className="grad">Without retraining.</span></h2>
-        </motion.div>
-        <motion.div variants={vUp} custom={1} style={{ marginBottom: 40 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'nowrap', overflowX: 'auto', padding: '4px 0' }}>
+        <motion.div variants={vUp} custom={3}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>Provider Selection Logic</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'nowrap', overflowX: 'auto' }}>
             {[
-              { label: '[ FR ] Input', sub: 'Any source language', color: 'var(--blue)' },
+              { label: 'ALIBABA_API_KEY?', color: 'var(--blue)' },
               null,
-              { label: 'Pass 1 — Base', sub: 'Adapter disabled', color: 'var(--t4)' },
+              { label: 'Use qwen-plus', color: 'var(--green)' },
               null,
-              { label: '[ EN ] Pivot', sub: 'Intermediate', color: 'var(--purple)' },
+              { label: 'GROQ_API_KEY?', color: 'var(--purple)' },
               null,
-              { label: 'Pass 2 — Locelith', sub: 'Adapter enabled', color: 'var(--blue)' },
+              { label: 'Use llama-3.3-70b', color: 'var(--amber)' },
               null,
-              { label: '[ AR ] Output', sub: 'Any target language', color: 'var(--cyan)' },
+              { label: 'Fallback: Alibaba', color: 'var(--red)' },
             ].map((item, i) => item === null
               ? <div key={i} className="flow-arrow">→</div>
-              : <div key={i} className="flow-node" style={{ borderColor: item.color, background: `${item.color}0A`, textAlign: 'center', minWidth: 120 }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.82rem', color: item.color, marginBottom: 3 }}>{item.label}</div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--t4)' }}>{item.sub}</div>
+              : <div key={i} className="flow-node" style={{ borderColor: item.color, background: `${item.color}0A`, textAlign: 'center', minWidth: 130 }}>
+                  <div style={{ fontFamily: 'var(--mono)', fontWeight: 700, fontSize: '0.78rem', color: item.color }}>{item.label}</div>
                 </div>
             )}
           </div>
         </motion.div>
-        <div className="cols-3" style={{ gap: 16 }}>
+      </div>
+    </Slide>
+  );
+}
+
+/* S23 — Quality Assurance Pipeline */
+export function S23Quality() {
+  return (
+    <Slide id="s23" className="slide slide-lighter">
+      <div className="cols-2" style={{ gap: 56, alignItems: 'center' }}>
+        <motion.div variants={vUp} custom={0}>
+          <div className="eyebrow">Quality Assurance</div>
+          <h2 className="title-md" style={{ marginBottom: 20 }}>Translation quality<br /><span className="grad">scored automatically.</span></h2>
+          <p className="body-sm" style={{ marginBottom: 28 }}>A dedicated QualityService evaluates every translated string using a trained Keras model (quality_model.h5) — built on 400K+ synthetic quality labels — before results are cached or returned to the client.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { label: 'Training data', val: '400K+ synthetic quality-labelled string pairs' },
+              { label: 'Model', val: 'Keras H5 neural net (quality_model.h5)' },
+              { label: 'Outputs', val: 'Quality score 0–1 · Accept / Flag / Reject' },
+              { label: 'PII guard', val: 'DataSanitizationService strips emails, phones, IDs' },
+            ].map(item => (
+              <div key={item.label} style={{ display: 'flex', gap: 0, borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}>
+                <div style={{ background: 'rgba(37,99,235,0.08)', padding: '9px 14px', fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--blue)', width: 130, flexShrink: 0, display: 'flex', alignItems: 'center' }}>{item.label}</div>
+                <div style={{ padding: '9px 14px', fontSize: '0.78rem', color: 'var(--t3)' }}>{item.val}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div variants={vUp} custom={1}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 16 }}>Quality Pipeline Flow</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {[
+              { step: 'Input', desc: 'Raw translated string from Alibaba / Groq', color: 'var(--blue)' },
+              { step: 'Sanitise', desc: 'DataSanitizationService — PII detection & masking', color: 'var(--purple)' },
+              { step: 'Score', desc: 'QualityService — Keras model inference', color: 'var(--amber)' },
+              { step: 'Gate', desc: 'Score ≥ 0.7 → Accept · 0.4–0.7 → Flag · < 0.4 → Reject', color: 'var(--cyan)' },
+              { step: 'Cache', desc: 'Accepted strings saved to MongoDB + JSON L1', color: 'var(--green)' },
+              { step: 'Return', desc: 'Quality-verified translation delivered to SDK', color: 'var(--green)' },
+            ].map((s, i) => (
+              <div key={s.step} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '9px 14px', borderRadius: 8, background: i % 2 === 0 ? 'var(--surface)' : 'transparent' }}>
+                <div style={{ width: 68, fontFamily: 'var(--mono)', fontSize: '0.68rem', color: s.color, fontWeight: 700, flexShrink: 0 }}>{s.step}</div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--t3)' }}>{s.desc}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </Slide>
+  );
+}
+
+/* S24 — PipelineService Architecture */
+export function S24Pipeline() {
+  return (
+    <Slide id="s24" className="slide slide-light">
+      <div>
+        <motion.div variants={vUp} custom={0} style={{ marginBottom: 40 }}>
+          <div className="eyebrow">Core Engine — PipelineService</div>
+          <h2 className="title-md">The 56KB orchestrator that<br /><span className="grad">connects every subsystem.</span></h2>
+        </motion.div>
+        <div className="cols-3" style={{ gap: 16, marginBottom: 32 }}>
           {[
-            { abbr: 'A2A', title: 'Any-to-Any Translation', body: 'Supports all 112×112 language pairs using only En→X trained weights — no additional training required.', color: 'var(--blue)' },
-            { abbr: '1X', title: 'Single Adapter', body: 'One 7B adapter handles the full translation matrix via the English pivot strategy, reducing deployment complexity.', color: 'var(--purple)' },
-            { abbr: 'QA', title: 'Quality Validated', body: 'Back-translation testing confirmed that the two-pass approach introduces <2% BLEU degradation vs direct training.', color: 'var(--green)' },
+            { cat: 'Detection', color: 'var(--blue)', items: ['detectFramework()', 'resolveProjectRoot()', 'loadProjectConfig()', '.Locelithignore parser'] },
+            { cat: 'Scanning', color: 'var(--purple)', items: ['ReactScanner (46KB)', 'AngularScanner', 'VanillaScanner', 'PuppeteerDOMExtractor', 'ESLintExtractor'] },
+            { cat: 'Transformation', color: 'var(--cyan)', items: ['ReactReplacer (45KB)', 'ReactInjector', 'AngularReplacer', 'AngularInjector', 'VanillaReplacer'] },
+            { cat: 'Translation', color: 'var(--amber)', items: ['translateStrings()', 'AlibabaService', 'GroqService', 'QualityService', 'DataSanitizationService'] },
+            { cat: 'Storage', color: 'var(--green)', items: ['BackupService', 'RevertService', 'StorageService', 'I18nService', 'UsageReporter'] },
+            { cat: 'Compliance', color: 'var(--red)', items: ['GDPRService', 'PII masking', 'Cascade delete', 'Right to erasure', 'Audit logging'] },
           ].map((d, i) => (
-            <motion.div key={d.title} variants={vUp} custom={i + 2} className="card" style={{ borderTop: `2px solid ${d.color}` }}>
-              <div style={{ fontFamily: 'var(--mono)', fontWeight: 800, fontSize: '1rem', color: d.color, marginBottom: 10, background: `${d.color}15`, width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8 }}>{d.abbr}</div>
-              <div style={{ fontWeight: 700, color: d.color, marginBottom: 8, fontSize: '0.88rem' }}>{d.title}</div>
-              <p className="body-xs" style={{ lineHeight: 1.7 }}>{d.body}</p>
+            <motion.div key={d.cat} variants={vUp} custom={i + 1} className="card" style={{ borderTop: `2px solid ${d.color}`, padding: '18px 16px' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: d.color, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 10 }}>{d.cat}</div>
+              {d.items.map(it => (
+                <div key={it} style={{ display: 'flex', gap: 6, alignItems: 'flex-start', fontSize: '0.74rem', color: 'var(--t3)', marginBottom: 4 }}>
+                  <div style={{ width: 4, height: 4, borderRadius: '50%', background: d.color, flexShrink: 0, marginTop: 5 }} />
+                  {it}
+                </div>
+              ))}
             </motion.div>
           ))}
         </div>
@@ -259,21 +211,65 @@ export function S25DoublePass() {
   );
 }
 
+/* S25 — SaaS Platform Pages */
+export function S25SaaS() {
+  return (
+    <Slide id="s25" className="slide slide-lighter">
+      <div>
+        <motion.div variants={vUp} custom={0} style={{ marginBottom: 40 }}>
+          <div className="eyebrow">SaaS Web Platform</div>
+          <h2 className="title-md">A complete developer portal.<br /><span className="grad">End to end.</span></h2>
+        </motion.div>
+        <div className="cols-2" style={{ gap: 20, marginBottom: 28 }}>
+          {[
+            { page: 'Index — Landing Page', desc: 'Marketing homepage: product overview, pricing plans, feature comparison, CTA to sign up.', color: 'var(--blue)' },
+            { page: 'SignUp / SignIn', desc: 'Authentication with bcrypt-hashed passwords, JWT session tokens, and form validation via Zod.', color: 'var(--purple)' },
+            { page: 'Dashboard', desc: 'Developer workspace: API key management, usage statistics (Recharts), project overview, subscription status.', color: 'var(--cyan)' },
+            { page: 'Documentation', desc: 'Full interactive developer reference: CLI guide, SDK integration, API endpoints, code examples.', color: 'var(--green)' },
+            { page: 'Admin Panel', desc: 'Internal management: user accounts, subscription oversight, usage monitoring, GDPR erasure controls.', color: 'var(--amber)' },
+            { page: 'Scraper Dashboard', desc: 'Puppeteer DOM extraction interface: trigger web scraping jobs and inspect extracted translation strings.', color: 'var(--red)' },
+          ].map((p, i) => (
+            <motion.div key={p.page} variants={vUp} custom={i + 1}
+              style={{ display: 'flex', gap: 14, padding: '14px 18px', borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)' }}>
+              <div style={{ width: 4, background: p.color, borderRadius: 4, alignSelf: 'stretch', flexShrink: 0 }} />
+              <div>
+                <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--t1)', marginBottom: 3 }}>{p.page}</div>
+                <div className="body-xs">{p.desc}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <motion.div variants={vUp} custom={7}>
+          <div style={{ display: 'flex', gap: 16, padding: '16px 22px', borderRadius: 12, background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.12)' }}>
+            <div style={{ fontFamily: 'var(--mono)', fontWeight: 700, color: 'var(--blue)', fontSize: '0.82rem' }}>API Routes:</div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              {['auth', 'apiKeys', 'stripe', 'subscriptions', 'translations', 'usage', 'admin', 'health'].map(r => (
+                <span key={r} style={{ fontFamily: 'var(--mono)', fontSize: '0.63rem', background: 'var(--bg2)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4, color: 'var(--t3)' }}>/{r}</span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </Slide>
+  );
+}
+
+/* S26 — Deployment */
 export function S26Deployment() {
   return (
     <Slide id="s26" className="slide slide-light">
       <div className="cols-2" style={{ gap: 56, alignItems: 'center' }}>
         <motion.div variants={vUp} custom={0}>
           <div className="eyebrow">Production Deployment</div>
-          <h2 className="title-md" style={{ marginBottom: 20 }}>CPU inference.<br /><span className="grad-green">~$5 / month.</span></h2>
-          <p className="body-sm" style={{ marginBottom: 32 }}>Dynamic LoRA loading merges the base GGUF model and the adapter weights at runtime — eliminating the need for a dedicated GPU server in production.</p>
+          <h2 className="title-md" style={{ marginBottom: 20 }}>Three services.<br /><span className="grad-green">One platform.</span></h2>
+          <p className="body-sm" style={{ marginBottom: 32 }}>All services deployed on Railway with auto-restart, health check endpoints, and environment-based provider selection. No GPU required — translation is delegated to cloud AI APIs.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[
-              { label: 'Quantisation', val: 'GGUF Q4_K_M — 60% size reduction vs FP16' },
-              { label: 'Runtime', val: 'llama.cpp — optimised C++ CPU inference' },
-              { label: 'LoRA Loading', val: 'Dynamic merge at startup — no static baking needed' },
-              { label: 'Platform', val: 'Railway — $5/mo · auto-restart · health checks' },
-              { label: 'GPU Delta', val: '−0.43 BLEU vs GPU — quality fully maintained' },
+              { label: 'Business API', val: 'Node.js + Express · PostgreSQL via Prisma · Stripe webhooks' },
+              { label: 'Vault Server', val: 'Node.js + Express · AST pipeline · Alibaba + Groq proxy' },
+              { label: 'SaaS Frontend', val: 'Vite build → static files · served via Railway CDN' },
+              { label: 'Translation', val: 'Alibaba Qwen-plus (primary) · Groq Cloud (fallback)' },
+              { label: 'MCP Server', val: '7 tools via @modelcontextprotocol/sdk · stdio transport' },
             ].map(item => (
               <div key={item.label} style={{ display: 'flex', gap: 0, borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}>
                 <div style={{ background: 'rgba(16,185,129,0.08)', padding: '9px 14px', fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--green)', width: 120, flexShrink: 0, display: 'flex', alignItems: 'center' }}>{item.label}</div>
@@ -282,25 +278,19 @@ export function S26Deployment() {
             ))}
           </div>
         </motion.div>
-        <motion.div variants={vUp} custom={1}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 16 }}>Runtime Architecture</div>
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>Service Architecture</div>
           {[
-            { top: 'Base Model (GGUF Q4_K_M)', bg: 'rgba(37,99,235,0.08)', border: 'var(--blue)', h: 80 },
-            { top: '+ LoRA Adapter weights', bg: 'rgba(124,58,237,0.08)', border: 'var(--purple)', h: 50 },
-            { top: '= Merged Inference Model', bg: 'rgba(16,185,129,0.08)', border: 'var(--green)', h: 60, bold: true },
-          ].map((b, i) => (
-            <div key={b.top} style={{ height: b.h, borderRadius: 10, background: b.bg, border: `1px solid ${b.border}`, display: 'flex', alignItems: 'center', paddingLeft: 20, marginBottom: i < 2 ? 4 : 0, fontWeight: b.bold ? 700 : 500, fontSize: '0.84rem', color: 'var(--t2)' }}>
-              {b.top}
+            { name: 'SaaS Frontend (Vite + React 18)', color: 'var(--blue)', port: '5173' },
+            { name: 'Business API (Express)', color: 'var(--purple)', port: '3000' },
+            { name: 'Vault Server (Express + Pipeline)', color: 'var(--amber)', port: '3001' },
+            { name: 'MCP Server (stdio)', color: 'var(--green)', port: 'stdio' },
+          ].map((s, i) => (
+            <div key={s.name} style={{ height: 56, borderRadius: 10, background: `${s.color}08`, border: `1px solid ${s.color}22`, display: 'flex', alignItems: 'center', paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '0.84rem', fontWeight: 600, color: s.color }}>{s.name}</span>
+              <span style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)' }}>:{s.port}</span>
             </div>
           ))}
-          <div style={{ marginTop: 20, display: 'flex', gap: 12 }}>
-            {[{ v: '5.8GB', l: 'VRAM (GPU)' }, { v: '~8s', l: 'CPU latency' }, { v: '60.91', l: 'BLEU (CPU)' }].map(s => (
-              <div key={s.l} className="card" style={{ flex: 1, textAlign: 'center', padding: '14px 10px' }}>
-                <div style={{ fontFamily: 'var(--sans)', fontSize: '1.3rem', fontWeight: 800, color: 'var(--green)' }}>{s.v}</div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--t4)', marginTop: 4 }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </div>
     </Slide>

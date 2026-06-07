@@ -134,14 +134,14 @@ export function S30Achievements() {
         </motion.div>
         <div className="cols-2" style={{ gap: 14 }}>
           {[
-            { abbr: 'AST', d: 'AST-based extraction', note: 'React · Angular · Vanilla JS · 100% replacement rate', c: 'var(--blue)' },
-            { abbr: 'SLM', d: 'Locelith-7B adapter', note: 'BLEU 61.34 · chrF 83.42 · +18.4 vs base model', c: 'var(--purple)' },
-            { abbr: 'WEB', d: 'SaaS platform', note: 'Marketing · Dashboard · Admin panel · Stripe billing', c: 'var(--cyan)' },
-            { abbr: 'NPM', d: '4 npm SDK packages', note: '@locelith/core · react · angular · vanilla', c: 'var(--green)' },
-            { abbr: 'A2A', d: 'Double-Pass pipeline', note: '112×112 language pairs without retraining', c: 'var(--amber)' },
-            { abbr: 'PAY', d: 'Stripe integration', note: 'Checkout · webhooks · billing portal · invoices', c: 'var(--blue)' },
-            { abbr: 'MCP', d: 'MCP Server', note: '7 tools — AI-agent driven localisation automation', c: 'var(--purple)' },
-            { abbr: 'OPS', d: 'CPU production deployment', note: 'GGUF · llama.cpp · ~$5/month · zero GPU cost', c: 'var(--green)' },
+            { abbr: 'AST', d: 'AST-based extraction', note: 'React · Angular · Vanilla JS · 100% replacement rate across all frameworks', c: 'var(--blue)' },
+            { abbr: 'SDK', d: '4 SDK packages published', note: '@locelith/core (CLI) · @locelith/react · locelith-angular · @locelith/vanilla', c: 'var(--purple)' },
+            { abbr: 'WEB', d: 'SaaS platform', note: 'Landing · Dashboard · Admin · Documentation · Scraper · Stripe billing', c: 'var(--cyan)' },
+            { abbr: 'API', d: 'Business API', note: '9 route groups: auth · apiKeys · stripe · subscriptions · translations · usage · admin', c: 'var(--green)' },
+            { abbr: 'QA', d: 'Quality model', note: 'Keras H5 quality scorer trained on 400K+ synthetic pairs · auto-accept/flag/reject', c: 'var(--amber)' },
+            { abbr: 'PAY', d: 'Stripe integration', note: 'Checkout · webhooks · billing portal · subscription management', c: 'var(--blue)' },
+            { abbr: 'MCP', d: 'MCP Server', note: '7 tools — AI-agent driven localisation automation via @modelcontextprotocol/sdk', c: 'var(--purple)' },
+            { abbr: 'OPS', d: 'Cloud deployment', note: 'Railway · Alibaba Qwen-plus + Groq Cloud · no GPU required', c: 'var(--green)' },
           ].map((item, i) => (
             <motion.div key={item.d} variants={vLeft} custom={i + 1}
               style={{ display: 'flex', gap: 14, padding: '14px 18px', borderRadius: 12, background: 'var(--surface)', border: `1px solid var(--border)`, alignItems: 'flex-start' }}>

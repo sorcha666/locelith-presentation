@@ -6,7 +6,7 @@ import Background from './Background';
 import { S01Cover, S02Ch1Intro, S03Stat, S04Tax, S05Host, S06Objectives } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S09Comparison, S10Problem, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault, S17SDK, S18Database } from './Chapter4';
-import { S19Ch5Intro, S20TechStack, S21Terminal, S22Dataset, S23Training, S24Benchmark, S25DoublePass, S26Deployment } from './Chapter5';
+import { S19Ch5Intro, S20TechStack, S21Terminal, S22Providers, S23Quality, S24Pipeline, S25SaaS, S26Deployment } from './Chapter5';
 import { S27Ch6Intro, S28AST, S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
 
 const SLIDES = [
@@ -31,10 +31,10 @@ const SLIDES = [
   { id: 's19', ch: 5, label: 'Ch.5 Impl' },
   { id: 's20', ch: 5, label: 'Stack' },
   { id: 's21', ch: 5, label: 'Demo' },
-  { id: 's22', ch: 5, label: 'Dataset' },
-  { id: 's23', ch: 5, label: 'Training' },
-  { id: 's24', ch: 5, label: 'Benchmark' },
-  { id: 's25', ch: 5, label: 'Double-Pass' },
+  { id: 's22', ch: 5, label: 'Providers' },
+  { id: 's23', ch: 5, label: 'Quality' },
+  { id: 's24', ch: 5, label: 'Pipeline' },
+  { id: 's25', ch: 5, label: 'SaaS Platform' },
   { id: 's26', ch: 5, label: 'Deployment' },
   { id: 's27', ch: 6, label: 'Ch.6 Tests' },
   { id: 's28', ch: 6, label: 'Validation' },
@@ -144,10 +144,10 @@ export default function App() {
         <S19Ch5Intro />
         <S20TechStack />
         <S21Terminal />
-        <S22Dataset />
-        <S23Training />
-        <S24Benchmark />
-        <S25DoublePass />
+        <S22Providers />
+        <S23Quality />
+        <S24Pipeline />
+        <S25SaaS />
         <S26Deployment />
         <S27Ch6Intro />
         <S28AST />
