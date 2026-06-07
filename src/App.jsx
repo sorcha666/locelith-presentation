@@ -129,6 +129,25 @@ export default function App() {
     };
   }, []);
 
+  // ── Mouse click navigation (left = next, right = prev, no context menu) ──
+  useEffect(() => {
+    const onClick = e => {
+      // Ignore clicks on interactive elements (nav dots, buttons, links)
+      if (e.target.closest('nav, button, a, [role="button"]')) return;
+      goTo(Math.min(activeRef.current + 1, SLIDES.length - 1));
+    };
+    const onContextMenu = e => {
+      e.preventDefault(); // suppress right-click menu
+      goTo(Math.max(activeRef.current - 1, 0));
+    };
+    window.addEventListener('click',       onClick);
+    window.addEventListener('contextmenu', onContextMenu);
+    return () => {
+      window.removeEventListener('click',       onClick);
+      window.removeEventListener('contextmenu', onContextMenu);
+    };
+  }, []);
+
   // ── Keyboard navigation ──
   useEffect(() => {
     const onKey = e => {
