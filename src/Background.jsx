@@ -1,37 +1,39 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Pseudo-3D Neural Network Tunnel — pure 2D canvas, no WebGL.
+ * Sphere Neural Network Background
  *
- * Fixes:
- *  1. Infinite looping tunnel — nodes are recycled ahead of the camera so
- *     the network NEVER ends, regardless of scroll depth.
- *  2. ISO language codes rendered on select nodes, giving the network a
- *     multilingual identity that reinforces the "112 languages" claim.
- *  3. Camera travels at a comfortable depth — always inside the tunnel.
+ * - Fibonacci-distributed nodes on a sphere surface
+ * - Each node connected to its 5 nearest neighbours (clean mesh)
+ * - Spins on Y-axis (vertical axis) — driven by scroll progress
+ * - Ambient slow ambient rotation always running
+ * - Sharp crisp dots + lines, no blurry halos
+ * - ISO language codes on front-facing nodes
  */
 
 const LANG_CODES = [
   'AR','FR','DE','ES','ZH','JA','KO','RU','PT','IT',
   'TR','NL','PL','SV','DA','FI','HE','FA','HI','TH',
   'VI','ID','MS','UK','CS','HU','RO','BG','EL','SK',
-  'LT','LV','ET','HR','SR','SL','MK','SQ','KA','AZ',
-  'AM','SW','UR','BN','PA','MR','TA','TE','KN','ML',
-  'SI','NE','MY','KM','LO','MN','UZ','TK','KY','KK',
-  'TL','JV','SU','CEB','HT','LA','CY','EU','IS','AF',
-  'ZU','YO','IG','HA','SN','SO','RW','MG','NY','ST',
+  'LT','LV','ET','HR','SR','SL','KA','AZ','AM','SW',
+  'UR','BN','TA','TE','KN','ML','SI','NE','MY','KM',
+  'MN','UZ','TK','KY','KK','TL','JV','CY','EU','IS',
+  'AF','ZU','YO','IG','HA','SN','SO','RW','MG','NY',
 ];
+
+const NODE_COUNT   = 110;
+const NEIGHBOURS   = 5;  // connections per node
 
 export default function Background() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let W, H, raf, t = 0;
+    const canvas  = canvasRef.current;
+    const ctx     = canvas.getContext('2d');
+    let W, H, raf;
+    let t = 0;
     let scrollProgress = 0;
 
-    /* ── Resize ── */
     const resize = () => {
       W = canvas.width  = window.innerWidth;
       H = canvas.height = window.innerHeight;
@@ -39,175 +41,146 @@ export default function Background() {
     resize();
     window.addEventListener('resize', resize);
 
-    /* ── Scroll tracking ── */
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       scrollProgress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    /* ── Tunnel dimensions ── */
-    const NODE_COUNT  = 200;
-    const SEGMENT_LEN = 800;   // one repeating segment of tunnel
-    const TUNNEL_R    = 170;
-
-    /* ── Generate one segment of nodes (we'll tile them) ── */
-    const baseNodes = Array.from({ length: NODE_COUNT }, (_, i) => {
-      const angle = Math.random() * Math.PI * 2;
-      const r     = TUNNEL_R * (0.15 + 0.85 * Math.sqrt(Math.random()));
-      const hasLabel = Math.random() < 0.28; // ~28% of nodes get a language label
+    /* ── Build nodes on sphere surface (Fibonacci distribution) ── */
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    const nodes  = Array.from({ length: NODE_COUNT }, (_, i) => {
+      const y     = 1 - (i / (NODE_COUNT - 1)) * 2;
+      const r     = Math.sqrt(Math.max(0, 1 - y * y));
+      const theta = golden * i;
       return {
-        x:        Math.cos(angle) * r,
-        y:        Math.sin(angle) * r,
-        zOffset:  Math.random() * SEGMENT_LEN, // position within one segment
-        hue:      Math.random() > 0.55 ? 265 : 215, // purple or blue
-        phase:    Math.random() * Math.PI * 2,
-        label:    hasLabel ? LANG_CODES[i % LANG_CODES.length] : null,
+        x:     Math.cos(theta) * r,
+        y,
+        z:     Math.sin(theta) * r,
+        label: Math.random() < 0.5 ? LANG_CODES[i % LANG_CODES.length] : null,
+        hue:   210 + (i / NODE_COUNT) * 70, // gradient from blue (210) to purple (280)
       };
     });
 
-    /* ── Build local edges within one segment ── */
-    const edges = [];
-    for (let i = 0; i < NODE_COUNT; i++) {
-      for (let j = i + 1; j < NODE_COUNT; j++) {
-        const dx = baseNodes[i].x - baseNodes[j].x;
-        const dy = baseNodes[i].y - baseNodes[j].y;
-        const dz = baseNodes[i].zOffset - baseNodes[j].zOffset;
-        if (dx*dx + dy*dy + dz*dz < 85*85) {
-          edges.push([i, j]);
-        }
+    /* ── Build edges — k nearest neighbours per node ── */
+    const edgeSet = new Set();
+    nodes.forEach((a, i) => {
+      const dists = nodes.map((b, j) => {
+        const dx = a.x - b.x, dy = a.y - b.y, dz = a.z - b.z;
+        return { j, d: dx*dx + dy*dy + dz*dz };
+      });
+      dists.sort((x, y) => x.d - y.d);
+      // Take NEIGHBOURS closest (skip self at index 0)
+      for (let k = 1; k <= NEIGHBOURS; k++) {
+        const key = [Math.min(i, dists[k].j), Math.max(i, dists[k].j)].join('-');
+        edgeSet.add(key);
       }
-    }
+    });
+    const edges = [...edgeSet].map(key => key.split('-').map(Number));
 
-    /* ── Perspective projection — pure forward-facing, no Y rotation ── */
-    const FOV = 340;
-    const project = (x, y, z, camZ) => {
-      const depth = z - camZ;
-      if (depth <= 8) return null;
-      const scale = FOV / depth;
+    /* ── Project a 3D sphere point to 2D screen ── */
+    const FOV = 900;
+    const project = (x, y, z, rotY, rotX, cx, cy, R) => {
+      // Y-axis rotation (spin)
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      let rx  = x * cosY + z * sinY;
+      let ry  = y;
+      let rz  = -x * sinY + z * cosY;
+
+      // X-axis rotation (gentle tilt)
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      const ry2  = ry * cosX - rz * sinX;
+      const rz2  = ry * sinX + rz * cosX;
+
+      const perspective = FOV / (FOV + rz2 * R);
       return {
-        sx: W * 0.5 + x * scale,
-        sy: H * 0.5 + y * scale,
-        scale,
-        depth,
+        sx:    cx + rx * R * perspective,
+        sy:    cy + ry2 * R * perspective,
+        scale: perspective,
+        depth: rz2, // -1 = front, +1 = back
       };
     };
 
     /* ── Draw loop ── */
-    const RENDER_AHEAD = SEGMENT_LEN * 2.2;
-    const FADE_START   = SEGMENT_LEN * 1.4;
-
     const draw = () => {
-      t += 0.005;
+      t += 0.006;
 
-      // Camera travels down the center Z-axis — always perfectly centered
-      const camZ = scrollProgress * SEGMENT_LEN * 0.82;
+      const R  = Math.min(W, H) * 0.32; // sphere radius in pixels
+      const cx = W * 0.5;
+      const cy = H * 0.5;
 
-      // Slow Z-axis barrel roll: rotates X/Y of each node around the tunnel axis
-      // This keeps the tunnel CENTER stable — just spins the ring of nodes
-      const rotZ = t * 0.018;
-      const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
-
-      // Very subtle screen-space sway (applied AFTER projection, not to world coords)
-      const swayX = Math.sin(t * 0.18) * 4;
-      const swayY = Math.cos(t * 0.14) * 2.5;
+      // Rotation: ambient slow + scroll spins it vertically (Y axis)
+      const rotY = t * 0.12 + scrollProgress * Math.PI * 3;
+      // Gentle persistent X-axis tilt (never goes past ±20°)
+      const rotX = Math.sin(t * 0.25) * 0.18;
 
       // Clear
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#FAFAFA';
+      ctx.fillStyle = '#F8F9FA';
       ctx.fillRect(0, 0, W, H);
 
-      // Radial glow — always at exact center
-      const grd = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.6);
-      grd.addColorStop(0,   'rgba(219,234,254,0.65)');
-      grd.addColorStop(0.5, 'rgba(237,233,254,0.25)');
+      // Soft radial gradient background glow
+      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.4);
+      grd.addColorStop(0,   'rgba(214,231,255,0.5)');
+      grd.addColorStop(0.6, 'rgba(230,220,255,0.2)');
       grd.addColorStop(1,   'transparent');
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, W, H);
 
-      /* Project nodes — tiled across segments, Z-barrel-rolled */
-      const projected = baseNodes.map(n => {
-        const segOffset = Math.floor((camZ - n.zOffset) / SEGMENT_LEN) + 1;
-        const worldZ = n.zOffset + segOffset * SEGMENT_LEN;
-        const depth = worldZ - camZ;
-        if (depth < 8 || depth > RENDER_AHEAD) return null;
+      // Project all nodes
+      const proj = nodes.map(n => project(n.x, n.y, n.z, rotY, rotX, cx, cy, R));
 
-        // Apply Z-axis barrel roll to X,Y (keeps tunnel centered)
-        const rx = n.x * cosZ - n.y * sinZ;
-        const ry = n.x * sinZ + n.y * cosZ;
-
-        const p = project(rx, ry, worldZ, camZ);
-        if (!p) return null;
-
-        // Apply screen-space sway AFTER projection
-        return { ...p, sx: p.sx + swayX, sy: p.sy + swayY };
+      // ── Draw edges (back to front order for correct overlap) ──
+      // Sort edges by avg depth (draw back edges first)
+      const sortedEdges = [...edges].sort((a, b) => {
+        const da = (proj[a[0]].depth + proj[a[1]].depth) / 2;
+        const db = (proj[b[0]].depth + proj[b[1]].depth) / 2;
+        return db - da; // back first
       });
 
-      /* Draw edges */
-      edges.forEach(([i, j]) => {
-        const a = projected[i], b = projected[j];
-        if (!a || !b) return;
-        const avgDepth = (a.depth + b.depth) / 2;
-        const alpha = 0.18 * Math.max(0, 1 - avgDepth / FADE_START);
-        if (alpha < 0.01) return;
+      sortedEdges.forEach(([i, j]) => {
+        const a = proj[i], b = proj[j];
+        const avgDepth = (a.depth + b.depth) / 2; // -1 front, +1 back
+        // Front edges: alpha 0.55, back edges: alpha 0.1
+        const alpha = 0.55 - avgDepth * 0.22;
+        if (alpha < 0.04) return;
+
         ctx.beginPath();
         ctx.moveTo(a.sx, a.sy);
         ctx.lineTo(b.sx, b.sy);
-        ctx.strokeStyle = `rgba(59,130,246,${alpha})`;
-        ctx.lineWidth = 0.7;
+        // Front: vivid blue, back: faint
+        const hue = 220 + avgDepth * 30;
+        ctx.strokeStyle = `hsla(${hue},72%,52%,${alpha.toFixed(2)})`;
+        ctx.lineWidth = 1.2 - avgDepth * 0.3;
         ctx.stroke();
       });
 
-      /* Draw nodes + language labels */
-      baseNodes.forEach((n, i) => {
-        const p = projected[i];
-        if (!p) return;
+      // ── Draw nodes (back to front) ──
+      const sortedNodes = nodes
+        .map((n, i) => ({ n, p: proj[i], i }))
+        .sort((a, b) => b.p.depth - a.p.depth); // back first
 
-        const pulse = 0.5 + 0.5 * Math.sin(t * 1.5 + n.phase);
-        const r     = Math.max(0.3, p.scale * 3.8);
-        const alpha = Math.min(0.95, (0.45 + 0.4 * pulse) * Math.max(0, 1 - p.depth / FADE_START));
-        if (alpha < 0.02) return;
+      sortedNodes.forEach(({ n, p, i }) => {
+        const isFront = p.depth < 0.2;
+        const alpha   = isFront ? 0.9 : Math.max(0.12, 0.5 - p.depth * 0.35);
+        const r       = Math.max(1.5, (isFront ? 4.5 : 2.8) * p.scale);
 
-        // Glow halo
-        const halo = ctx.createRadialGradient(p.sx, p.sy, 0, p.sx, p.sy, r * 4.5);
-        halo.addColorStop(0, `hsla(${n.hue},80%,60%,${alpha * 0.45})`);
-        halo.addColorStop(1, 'transparent');
-        ctx.fillStyle = halo;
-        ctx.beginPath();
-        ctx.arc(p.sx, p.sy, r * 4.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Node dot
+        // Node circle — crisp, no blur
         ctx.beginPath();
         ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${n.hue},75%,55%,${alpha})`;
+        ctx.fillStyle = `hsla(${n.hue},70%,52%,${alpha.toFixed(2)})`;
         ctx.fill();
 
-        // Language label — only render when node is large enough to be legible
-        if (n.label && r > 1.8) {
-          const fontSize = Math.min(11, Math.max(7, r * 3.2));
+        // Language label — only on front-facing nodes that are big enough
+        if (n.label && isFront && r > 3.5) {
+          const fontSize = Math.min(10, Math.max(7, r * 2.2));
           ctx.font = `700 ${fontSize}px "JetBrains Mono", monospace`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'bottom';
-
-          // Background pill for readability
-          const tw = ctx.measureText(n.label).width;
-          ctx.fillStyle = `hsla(${n.hue},80%,96%,${alpha * 0.85})`;
-          ctx.beginPath();
-          ctx.roundRect(p.sx - tw/2 - 3, p.sy - r - fontSize - 4, tw + 6, fontSize + 4, 3);
-          ctx.fill();
-
-          ctx.fillStyle = `hsla(${n.hue},70%,40%,${alpha})`;
+          ctx.fillStyle = `hsla(${n.hue},65%,35%,${(alpha * 0.9).toFixed(2)})`;
           ctx.fillText(n.label, p.sx, p.sy - r - 2);
         }
       });
-
-      // Soft vignette
-      const vig = ctx.createRadialGradient(W/2, H/2, H*0.3, W/2, H/2, H*0.95);
-      vig.addColorStop(0, 'transparent');
-      vig.addColorStop(1, 'rgba(240,240,245,0.45)');
-      ctx.fillStyle = vig;
-      ctx.fillRect(0, 0, W, H);
 
       raf = requestAnimationFrame(draw);
     };
