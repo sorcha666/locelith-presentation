@@ -182,26 +182,8 @@ export function S12Actors() {
             ))}
           </div>
         </motion.div>
-        <motion.div variants={vUp} custom={1}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 16 }}>Core Use Cases</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {[
-              { uc: 'UC-01', name: 'Execute Translation Pipeline', actor: 'Developer', priority: 'Critical' },
-              { uc: 'UC-02', name: 'Subscribe to Plan (Stripe)', actor: 'Developer', priority: 'High' },
-              { uc: 'UC-03', name: 'Manage API Keys', actor: 'Developer', priority: 'High' },
-              { uc: 'UC-04', name: 'Manage Users & Subscriptions', actor: 'Administrator', priority: 'Critical' },
-              { uc: 'UC-05', name: 'Monitor Global Analytics', actor: 'Administrator', priority: 'Medium' },
-              { uc: 'UC-06', name: 'Monitor Model Health', actor: 'AI Engineer', priority: 'High' },
-              { uc: 'UC-07', name: 'Generate AI Datasets', actor: 'AI Engineer', priority: 'Medium' },
-            ].map(u => (
-              <div key={u.uc} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '10px 14px', borderRadius: 10, background: 'var(--surface)', border: '1px solid var(--border)' }}>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', width: 48, flexShrink: 0 }}>{u.uc}</span>
-                <span style={{ flex: 1, fontSize: '0.82rem', color: 'var(--t2)', fontWeight: 500 }}>{u.name}</span>
-                <span style={{ fontSize: '0.65rem', color: 'var(--t4)', width: 88, textAlign: 'right' }}>{u.actor}</span>
-                <span className={`chip ${u.priority === 'Critical' ? 'chip-red' : u.priority === 'High' ? 'chip-amber' : 'chip-blue'}`} style={{ fontSize: '0.58rem' }}>{u.priority}</span>
-              </div>
-            ))}
-          </div>
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src="/global_usecase.png" alt="Global Use Case Diagram" style={{ width: '100%', maxWidth: 500, borderRadius: 12, border: '1px solid var(--border)' }} />
         </motion.div>
       </div>
     </Slide>

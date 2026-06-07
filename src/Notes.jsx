@@ -61,15 +61,31 @@ Those four deliverables are: the AST Translation Pipeline, the AI Quality Pipeli
   },
   s11: {
     speaker: 'Sarra',
-    text: `Chapter 3 — Specifications. We defined requirements from three user personas: the developer, the SaaS admin, and the end user. Adopted Scrumban methodology for agile delivery across 12 sprints.`,
+    text: `Chapter 3 — Specifications & Requirements Analysis.
+
+In this chapter, we focus on the detailed analysis of the system requirements for the complete Locelith ecosystem. We will identify the key actors interacting with the framework, and specify the functional and non-functional requirements across all our deliverables. Finally, we will define the technical constraints that guided our architecture.`,
   },
   s12: {
     speaker: 'Sarra',
-    text: `Use case actors:\n• Developer: runs CLI, integrates SDK\n• Admin: manages subscriptions, API keys, billing\n• End User: switches language at runtime with zero reload\n\nFunctional requirements derived from each actor's needs.`,
+    text: `We identified two primary human actors for the system, each with distinct responsibilities.
+
+First, the Developer. This is the core user who discovers the platform, subscribes to a plan, and uses our CLI tools to automatically localise their web applications. They manage their API keys and monitor their generated translations. Crucially, every single one of their actions requires strict authentication.
+
+Second, the Administrator. This profile oversees the entire SaaS platform. They manage user subscriptions via Stripe, monitor global system performance, and enforce GDPR compliance, including data erasure requests.
+
+(Note: For the technical implementation, we also defined a third internal role, the AI Engineer, who monitors SLM inference metrics and manages dataset generation).
+
+From these profiles, we derived 7 core use cases, ranging from executing the translation pipeline to managing Stripe billing.`,
   },
   s13: {
     speaker: 'Sarra',
-    text: `Non-functional requirements:\n• Performance: cache-first, <50ms response for known strings\n• Security: HMAC-SHA256 + JWT + PII masking\n• Reliability: multi-provider fallback (Alibaba → Groq)\n• GDPR: full data erasure on request\n• Availability: independent microservice deploy`,
+    text: `To ensure the system is production-ready, we established strict non-functional requirements.
+
+For Performance, the Vault Server must provide sub-100 millisecond translation latency for cached strings, and complete a full pipeline run in under 60 seconds for medium-sized projects.
+
+For Security and Privacy, all API communications use HMAC-SHA256 request signing. More importantly, we enforce a strict data minimisation principle: the source code is never stored persistently, and sensitive PII is masked before any AI translation occurs.
+
+Finally, for Extensibility, the AST parser was designed modularly, allowing us to easily add support for future frameworks like Vue.js or Svelte without rewriting the core engine.`,
   },
   s14: {
     speaker: 'Oussama',
