@@ -1,15 +1,12 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Sphere → Cylinder Tunnel Neural Network
+ * Sphere ↔ Circular Tunnel Neural Network
  *
- * Each node has TWO positions:
- *   spherePos  — point on Fibonacci sphere surface
- *   tunnelPos  — point in an infinite cylinder (tube)
- *
- * tunnelBlend (0→1) lerps between them.
- * flyZ accumulates in tunnel mode so tunnel nodes rush toward camera
- * from a central vanishing point — exactly like the original tunnel.
+ * SPHERE: Fibonacci sphere, nodes shaded by depth
+ * TUNNEL: All nodes on cylinder SURFACE (same radius = circular rings)
+ *         Edges computed in tunnel-space (nearby angle + Z only)
+ *         flyZ advances slowly — calm drift through the tube
  */
 
 const LANG_CODES = [
@@ -21,17 +18,18 @@ const LANG_CODES = [
   'CY','EU','IS','AF','ZU','YO','IG','HA','SN','SO',
 ];
 
-const NODE_COUNT  = 110;
-const NEIGHBOURS  = 4;
+const NODE_COUNT  = 90;
 
-// Sphere constants
-const FOV_S = 1200;
+// Sphere
+const FOV_S       = 1200;
+const S_NEIGH     = 3;     // sphere neighbours
 
-// Tunnel constants
-const TUBE_R    = 380;   // cylinder radius — nodes spread to screen edges
-const TUBE_LEN  = 2000;  // tile length — lots of breathing room between nodes
-const FOV_T     = 520;   // tunnel perspective FOV
-const FLY_SPEED = 0.4;   // px per frame — slow, calm drift
+// Tunnel
+const TUBE_R      = 320;   // all nodes on this radius → perfect circle ring
+const TUBE_LEN    = 2200;  // depth tile — lots of breathing room
+const FOV_T       = 560;
+const FLY_SPEED   = 0.35;  // calm drift
+const T_NEIGH     = 2;     // tunnel neighbours — sparse, clean
 
 export default function Background() {
   const canvasRef = useRef(null);
@@ -52,64 +50,68 @@ export default function Background() {
     resize();
     window.addEventListener('resize', resize);
 
-    /* ── Build nodes — Fibonacci sphere positions ── */
+    /* ── Build nodes ── */
     const golden = Math.PI * (3 - Math.sqrt(5));
     const nodes  = Array.from({ length: NODE_COUNT }, (_, i) => {
+      // Sphere position (unit sphere)
       const yUnit = 1 - (i / (NODE_COUNT - 1)) * 2;
       const r     = Math.sqrt(Math.max(0, 1 - yUnit * yUnit));
       const theta = golden * i;
 
-      // Sphere position (unit sphere, scaled by R in draw)
-      const sx = Math.cos(theta) * r;
-      const sy = yUnit;
-      const sz = Math.sin(theta) * r;
-
-      // Tunnel position — random angle + radius in cylinder, random Z in [0, TUBE_LEN]
-      const angle  = Math.random() * Math.PI * 2;
-      const tR     = TUBE_R * (0.25 + 0.75 * Math.sqrt(Math.random()));
-      const tx     = Math.cos(angle) * tR;
-      const ty     = Math.sin(angle) * tR;
-      const tz     = Math.random() * TUBE_LEN;
-
+      // Tunnel position — ALL on cylinder SURFACE (same radius = circular!)
+      const angle = (i / NODE_COUNT) * Math.PI * 2 * 13.7; // spread via golden-like angle
       return {
-        sx, sy, sz,         // sphere (unit)
-        tx, ty, tz,         // tunnel (px)
-        label: Math.random() < 0.5 ? LANG_CODES[i % LANG_CODES.length] : null,
+        // Sphere (unit)
+        sx: Math.cos(theta) * r,
+        sy: yUnit,
+        sz: Math.sin(theta) * r,
+        // Tunnel (px) — same radius for all
+        tx:    Math.cos(angle) * TUBE_R,
+        ty:    Math.sin(angle) * TUBE_R,
+        tz:    (i / NODE_COUNT) * TUBE_LEN,
+        angle: ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2),
+        label: Math.random() < 0.45 ? LANG_CODES[i % LANG_CODES.length] : null,
         hue:   210 + (i / NODE_COUNT) * 70,
         phase: Math.random() * Math.PI * 2,
       };
     });
 
-    /* ── k-nearest-neighbour edges (sphere space) ── */
-    const edgeSet = new Set();
+    /* ── Sphere edges (sphere-space proximity) ── */
+    const sEdgeSet = new Set();
+    nodes.forEach((a, i) => {
+      nodes
+        .map((b, j) => { const dx=a.sx-b.sx,dy=a.sy-b.sy,dz=a.sz-b.sz; return{j,d:dx*dx+dy*dy+dz*dz}; })
+        .sort((x,y)=>x.d-y.d).slice(1, S_NEIGH+1)
+        .forEach(({j})=>sEdgeSet.add([Math.min(i,j),Math.max(i,j)].join('-')));
+    });
+    const sphereEdges = [...sEdgeSet].map(k=>k.split('-').map(Number));
+
+    /* ── Tunnel edges (tunnel-space proximity — angle + Z only) ── */
+    const tEdgeSet = new Set();
     nodes.forEach((a, i) => {
       nodes
         .map((b, j) => {
-          const dx=a.sx-b.sx, dy=a.sy-b.sy, dz=a.sz-b.sz;
-          return { j, d: dx*dx+dy*dy+dz*dz };
+          // Distance in angle (wrap-around) + z
+          let da = Math.abs(a.angle - b.angle);
+          if (da > Math.PI) da = Math.PI * 2 - da;
+          const dz = Math.abs(a.tz - b.tz);
+          // Weight: prioritise same-ring (small da) connections
+          return { j, d: da * 200 + dz };
         })
-        .sort((x, y) => x.d - y.d)
-        .slice(1, NEIGHBOURS + 1)
-        .forEach(({ j }) => edgeSet.add([Math.min(i,j), Math.max(i,j)].join('-')));
+        .sort((x,y)=>x.d-y.d).slice(1, T_NEIGH+1)
+        .forEach(({j})=>tEdgeSet.add([Math.min(i,j),Math.max(i,j)].join('-')));
     });
-    const edges = [...edgeSet].map(k => k.split('-').map(Number));
+    const tunnelEdges = [...tEdgeSet].map(k=>k.split('-').map(Number));
 
     /* ── Sphere rotation ── */
     const rotateSphere = (x, y, z, rotY, rotX) => {
-      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-      const rx   = x * cosY + z * sinY;
-      const ry1  = y;
-      const rz1  = -x * sinY + z * cosY;
-      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-      return {
-        rx,
-        ry: ry1 * cosX - rz1 * sinX,
-        rz: ry1 * sinX + rz1 * cosX,
-      };
+      const cosY=Math.cos(rotY),sinY=Math.sin(rotY);
+      const rx=x*cosY+z*sinY, ry1=y, rz1=-x*sinY+z*cosY;
+      const cosX=Math.cos(rotX),sinX=Math.sin(rotX);
+      return { rx, ry:ry1*cosX-rz1*sinX, rz:ry1*sinX+rz1*cosX };
     };
 
-    /* ── Depth factor for sphere shading: quadratic, 1=front, 0=back ── */
-    const df = rz => { const f = Math.max(0, Math.min(1, (1 - rz) / 2)); return f * f; };
+    const df = rz => { const f=Math.max(0,Math.min(1,(1-rz)/2)); return f*f; };
 
     /* ── Draw ── */
     const draw = () => {
@@ -118,118 +120,108 @@ export default function Background() {
       const mode     = window.__bgMode || 'cover';
       const isTunnel = mode === 'tunnel';
 
-      // Blend targets
-      const targetTBlend  = isTunnel ? 1 : 0;
-      const targetCxFrac  = mode === 'cover' ? 0.72 : 0.5;
-      tunnelBlend += (targetTBlend - tunnelBlend) * 0.028;
-      curCxFrac   += (targetCxFrac - curCxFrac)   * 0.028;
+      tunnelBlend += ((isTunnel ? 1 : 0) - tunnelBlend) * 0.028;
+      curCxFrac   += ((mode === 'cover' ? 0.72 : 0.5) - curCxFrac) * 0.028;
 
-      // flyZ: advance in tunnel mode, decelerate when returning to sphere
       if (tunnelBlend > 0.05) flyZ += FLY_SPEED * tunnelBlend;
       else flyZ *= 0.95;
 
-      // Sphere params
-      const R_sphere  = Math.min(W, H) * 0.27;
+      const R_sphere  = Math.min(W,H) * 0.27;
       const sphere_cx = W * curCxFrac;
       const rotY      = t * 0.13;
-      const rotX      = Math.sin(t * 0.21) * (0.14 * (1 - tunnelBlend * 0.8));
+      const rotX      = Math.sin(t*0.21) * (0.14 * (1-tunnelBlend*0.9));
 
       /* Clear */
-      ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0,0,W,H);
       ctx.fillStyle = '#F8F9FA';
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0,0,W,H);
 
-      /* Background glow */
-      const glowCx = sphere_cx * (1 - tunnelBlend) + W * 0.5 * tunnelBlend;
-      const glowR  = R_sphere * (1.6 + tunnelBlend * 1.4);
-      const grd = ctx.createRadialGradient(glowCx, H/2, 0, glowCx, H/2, glowR);
-      grd.addColorStop(0,    `rgba(205,228,255,${0.48 + tunnelBlend * 0.18})`);
-      grd.addColorStop(0.55, `rgba(220,210,255,${0.18 + tunnelBlend * 0.08})`);
-      grd.addColorStop(1,    'transparent');
-      ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, W, H);
+      /* Glow */
+      const glowCx = sphere_cx*(1-tunnelBlend) + W*0.5*tunnelBlend;
+      const glowR  = R_sphere*(1.5+tunnelBlend*1.6);
+      const grd = ctx.createRadialGradient(glowCx,H/2,0,glowCx,H/2,glowR);
+      grd.addColorStop(0,   `rgba(205,228,255,${0.45+tunnelBlend*0.15})`);
+      grd.addColorStop(0.5, `rgba(220,210,255,${0.16+tunnelBlend*0.08})`);
+      grd.addColorStop(1,   'transparent');
+      ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
 
-      /* ── Project each node ──
-         Blend between sphere projection and tunnel projection             */
+      /* Project nodes */
       const projected = nodes.map(n => {
-        // ── SPHERE projection ──
-        const { rx, ry, rz } = rotateSphere(n.sx, n.sy, n.sz, rotY, rotX);
-        const depthS  = rz * R_sphere + FOV_S;
-        const scaleS  = FOV_S / depthS;
-        const sxS     = sphere_cx + rx * R_sphere * scaleS;
-        const syS     = H * 0.5 + ry * R_sphere * scaleS;
+        // Sphere projection
+        const {rx,ry,rz} = rotateSphere(n.sx,n.sy,n.sz,rotY,rotX);
+        const depthS = rz*R_sphere + FOV_S;
+        const scaleS = FOV_S/depthS;
+        const sxS    = sphere_cx + rx*R_sphere*scaleS;
+        const syS    = H*0.5 + ry*R_sphere*scaleS;
+        const facS   = df(rz);
 
-        // ── TUNNEL projection ──
-        // Tile the Z position: nodes recycle ahead of camera
+        // Tunnel projection — tile Z, nodes at TUBE_R from center
         const rawZ   = ((n.tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
-        const depthT = rawZ + 40; // camera offset so no z-fighting at z=0
+        const depthT = rawZ + 50;
         const scaleT = FOV_T / (FOV_T + depthT);
-        const sxT    = W * 0.5 + n.tx * scaleT;
-        const syT    = H * 0.5 + n.ty * scaleT;
+        const sxT    = W*0.5 + n.tx*scaleT;
+        const syT    = H*0.5 + n.ty*scaleT;
+        const facT   = Math.max(0, 1 - depthT/TUBE_LEN);
 
-        // Blend positions
-        const blX = sxS * (1 - tunnelBlend) + sxT * tunnelBlend;
-        const blY = syS * (1 - tunnelBlend) + syT * tunnelBlend;
-
-        // Shading factor:
-        // sphere: quadratic depth from rz
-        // tunnel: proximity (close nodes = bright, far = dim)
-        const facS = df(rz);
-        const facT = Math.max(0, 1 - depthT / TUBE_LEN);
-        const fac  = facS * (1 - tunnelBlend) + facT * tunnelBlend;
-
-        return { sx: blX, sy: blY, fac, rz, depthT };
+        const fac = facS*(1-tunnelBlend) + facT*tunnelBlend;
+        return {
+          sx: sxS*(1-tunnelBlend) + sxT*tunnelBlend,
+          sy: syS*(1-tunnelBlend) + syT*tunnelBlend,
+          fac, rz, depthT, scaleT,
+        };
       });
 
-      /* ── EDGES ── */
-      edges.forEach(([i, j]) => {
-        const a = projected[i], b = projected[j];
-        if (!a || !b) return;
-        const avgFac = (a.fac + b.fac) / 2;
-        const alpha  = 0.04 + avgFac * 0.60;
-        if (alpha < 0.05) return;
-        const hue = 215 + (1 - avgFac) * 25;
-        ctx.beginPath();
-        ctx.moveTo(a.sx, a.sy);
-        ctx.lineTo(b.sx, b.sy);
-        ctx.strokeStyle = `hsla(${hue},70%,54%,${alpha.toFixed(2)})`;
-        ctx.lineWidth   = 0.5 + avgFac * 1.4;
-        ctx.stroke();
-      });
+      /* Draw edges — blend between sphere-edges and tunnel-edges */
+      const drawEdges = (edgeList, alpha_mult) => {
+        edgeList.forEach(([i,j]) => {
+          const a=projected[i], b=projected[j];
+          if(!a||!b) return;
+          const avg   = (a.fac+b.fac)/2;
+          const alpha = (0.04 + avg*0.55) * alpha_mult;
+          if(alpha < 0.04) return;
+          ctx.beginPath();
+          ctx.moveTo(a.sx,a.sy);
+          ctx.lineTo(b.sx,b.sy);
+          ctx.strokeStyle = `hsla(${215+(1-avg)*25},68%,55%,${alpha.toFixed(2)})`;
+          ctx.lineWidth   = 0.5 + avg*1.2;
+          ctx.stroke();
+        });
+      };
 
-      /* ── NODES — sort by fac ascending (dim nodes first, vivid on top) ── */
+      // Sphere edges fade out as tunnel fades in, tunnel edges fade in
+      drawEdges(sphereEdges, 1 - tunnelBlend);
+      drawEdges(tunnelEdges, tunnelBlend);
+
+      /* Draw nodes */
       nodes
-        .map((n, i) => ({ n, p: projected[i] }))
-        .sort((a, b) => a.p.fac - b.p.fac)
-        .forEach(({ n, p }) => {
-          const alpha = 0.05 + p.fac * 0.92;
-          const dotR  = 0.8 + p.fac * 8.0;
+        .map((n,i)=>({n,p:projected[i]}))
+        .sort((a,b)=>a.p.fac-b.p.fac)
+        .forEach(({n,p}) => {
+          const alpha = 0.05 + p.fac*0.92;
+          const dotR  = 0.8 + p.fac*8.0;
 
-          /* Glow on vivid nodes */
-          if (p.fac > 0.6) {
-            const pulse = 0.55 + 0.45 * Math.sin(t * 1.7 + n.phase);
-            const gr    = ctx.createRadialGradient(p.sx, p.sy, 0, p.sx, p.sy, dotR * 4);
-            gr.addColorStop(0, `hsla(${n.hue},85%,62%,${(p.fac * 0.28 * pulse).toFixed(2)})`);
-            gr.addColorStop(1, 'transparent');
-            ctx.fillStyle = gr;
+          if(p.fac > 0.6) {
+            const pulse = 0.55+0.45*Math.sin(t*1.7+n.phase);
+            const gr = ctx.createRadialGradient(p.sx,p.sy,0,p.sx,p.sy,dotR*4);
+            gr.addColorStop(0,`hsla(${n.hue},85%,62%,${(p.fac*0.25*pulse).toFixed(2)})`);
+            gr.addColorStop(1,'transparent');
+            ctx.fillStyle=gr;
             ctx.beginPath();
-            ctx.arc(p.sx, p.sy, dotR * 4, 0, Math.PI * 2);
+            ctx.arc(p.sx,p.sy,dotR*4,0,Math.PI*2);
             ctx.fill();
           }
 
           ctx.beginPath();
-          ctx.arc(p.sx, p.sy, Math.max(0.5, dotR), 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(${n.hue},82%,48%,${alpha.toFixed(2)})`;
+          ctx.arc(p.sx,p.sy,Math.max(0.5,dotR),0,Math.PI*2);
+          ctx.fillStyle=`hsla(${n.hue},82%,48%,${alpha.toFixed(2)})`;
           ctx.fill();
 
-          /* Language label */
-          if (n.label && p.fac > 0.75 && dotR > 4.5) {
-            const fs = Math.min(10, dotR * 1.5);
-            ctx.font         = `700 ${fs}px "JetBrains Mono", monospace`;
-            ctx.textAlign    = 'center';
-            ctx.textBaseline = 'bottom';
-            ctx.fillStyle    = `hsla(${n.hue},65%,30%,${(alpha * 0.82).toFixed(2)})`;
-            ctx.fillText(n.label, p.sx, p.sy - dotR - 2);
+          if(n.label && p.fac>0.75 && dotR>4.5) {
+            const fs=Math.min(10,dotR*1.5);
+            ctx.font=`700 ${fs}px "JetBrains Mono",monospace`;
+            ctx.textAlign='center'; ctx.textBaseline='bottom';
+            ctx.fillStyle=`hsla(${n.hue},65%,30%,${(alpha*0.82).toFixed(2)})`;
+            ctx.fillText(n.label,p.sx,p.sy-dotR-2);
           }
         });
 
@@ -237,16 +229,11 @@ export default function Background() {
     };
     draw();
 
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-    };
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize',resize); };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}
-    />
+    <canvas ref={canvasRef}
+      style={{position:'fixed',inset:0,width:'100%',height:'100%',zIndex:0,pointerEvents:'none'}} />
   );
 }
