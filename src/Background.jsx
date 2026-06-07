@@ -1,11 +1,16 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Sphere Neural Network — CORRECTED perspective projection
+ * Sphere ↔ Tunnel Neural Network
  *
- * Bug fix: camera is placed at z = -FOV (behind the sphere), not at origin.
- * Node depth = rz2 * R + FOV (always positive for any sphere node).
- * Camera advance: depth = rz2 * R + FOV - camAdv * R
+ * SPHERE MODE (cover + chapter titles):
+ *   - Fibonacci sphere, spinning on Y-axis, static camera
+ *
+ * TUNNEL MODE (content slides):
+ *   - Same sphere geometry, but camera enters the sphere AND
+ *   - flyZ accumulates each frame → nodes continuously rush
+ *     toward the camera, get recycled from far ahead
+ *   - Creates genuine "flying through a neural wormhole" feel
  */
 
 const LANG_CODES = [
@@ -19,7 +24,8 @@ const LANG_CODES = [
 
 const NODE_COUNT = 120;
 const NEIGHBOURS = 4;
-const FOV        = 1200;   // large FOV = camera far from sphere = gentle perspective
+const FOV        = 1200;
+const TILE       = 700;  // recycle period in px — nodes wrap every TILE units
 
 export default function Background() {
   const canvasRef = useRef(null);
@@ -29,8 +35,13 @@ export default function Background() {
     const ctx    = canvas.getContext('2d');
     let W, H, raf, t = 0;
 
-    let curCamAdv = 0;
-    let curCxFrac = 0.72;
+    // Sphere position state
+    let curCamAdv = 0;    // 0=outside sphere, 1.5=inside
+    let curCxFrac = 0.72; // horizontal center of sphere (fraction of W)
+
+    // Tunnel state
+    let flyZ      = 0;    // accumulated flight distance — grows in tunnel mode
+    let tunnelBlend = 0;  // 0=sphere, 1=full tunnel (used for glow/colour blending)
 
     const resize = () => {
       W = canvas.width  = window.innerWidth;
@@ -39,7 +50,7 @@ export default function Background() {
     resize();
     window.addEventListener('resize', resize);
 
-    /* ── Fibonacci sphere ── */
+    /* ── Fibonacci sphere nodes ── */
     const golden = Math.PI * (3 - Math.sqrt(5));
     const nodes  = Array.from({ length: NODE_COUNT }, (_, i) => {
       const yUnit = 1 - (i / (NODE_COUNT - 1)) * 2;
@@ -66,116 +77,148 @@ export default function Background() {
     });
     const edges = [...edgeSet].map(k => k.split('-').map(Number));
 
-    /* ── Correct perspective projection ──
-       Camera sits at world-z = -FOV (behind the sphere center at z=0).
-       node world-z = rz2 * R
-       depth from camera = rz2 * R - (-FOV) = rz2 * R + FOV
-       With camera advance: camera moves to -FOV + camAdv*R
-       → depth = rz2 * R + FOV - camAdv * R
-    */
-    const project = (x, y, z, rotY, rotX, cx, cy, R, camAdv) => {
+    /* ── Rotation helpers ── */
+    const rotate = (x, y, z, rotY, rotX) => {
       const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
       const rx   = x * cosY + z * sinY;
-      const ry   = y;
-      const rz   = -x * sinY + z * cosY;
-
+      const ry1  = y;
+      const rz1  = -x * sinY + z * cosY;
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-      const ry2  = ry * cosX - rz * sinX;
-      const rz2  = ry * sinX + rz * cosX;
-
-      // Correct depth: always positive for any node when camAdv is reasonable
-      const depth = rz2 * R + FOV - camAdv * R;
-      if (depth <= 1) return null;
-
-      const scale = FOV / depth;
       return {
-        sx:  cx + rx * R * scale,
-        sy:  cy + ry2 * R * scale,
-        rz:  rz2,  // raw unit-sphere z: -1=front, +1=back
+        rx,
+        ry: ry1 * cosX - rz1 * sinX,
+        rz: ry1 * sinX + rz1 * cosX,
       };
     };
 
-    /* ── Depth-to-visibility factor: quadratic, 1=front, 0=back ── */
+    /* ── Depth factor: quadratic, 1=front, 0=back (for sphere shading) ── */
     const df = rz => {
       const f = Math.max(0, Math.min(1, (1 - rz) / 2));
       return f * f;
     };
 
-    /* ── Draw loop ── */
+    /* ── Draw ── */
     const draw = () => {
       t += 0.006;
 
       const mode = window.__bgMode || 'cover';
-      const targetCamAdv = mode === 'tunnel' ? 2.0 : 0;
-      const targetCxFrac = mode === 'cover'  ? 0.72 : 0.5;
+      const isTunnel = mode === 'tunnel';
 
-      curCamAdv += (targetCamAdv - curCamAdv) * 0.03;
-      curCxFrac += (targetCxFrac - curCxFrac) * 0.03;
+      /* Target values */
+      const targetCamAdv  = isTunnel ? 1.4 : 0;
+      const targetCxFrac  = mode === 'cover' ? 0.72 : 0.5;
+      const targetTBlend  = isTunnel ? 1 : 0;
 
-      // R must satisfy: FOV - camAdv_max * R > 0  →  R < FOV / camAdv_max
-      // With camAdv_max=2.0, FOV=1200: R < 600. We use ~260 which is fine.
-      const R  = Math.min(W, H) * 0.27;
-      const cx = W * curCxFrac;
-      const cy = H * 0.5;
+      const lerpSpd = 0.03;
+      curCamAdv   += (targetCamAdv  - curCamAdv)   * lerpSpd;
+      curCxFrac   += (targetCxFrac  - curCxFrac)   * lerpSpd;
+      tunnelBlend += (targetTBlend  - tunnelBlend)  * lerpSpd;
 
-      const rotY = t * 0.13;
-      const rotX = Math.sin(t * 0.21) * 0.14;
+      /* In tunnel mode: advance flyZ to create continuous forward motion */
+      if (isTunnel) {
+        flyZ += 1.8; // speed of flight through tunnel (px per frame)
+      } else {
+        // Slowly decelerate when returning to sphere
+        flyZ *= 0.94;
+      }
+
+      const R   = Math.min(W, H) * 0.27;
+      const cx  = W * (isTunnel ? 0.5 : curCxFrac);
+      const cy  = H * 0.5;
+
+      /* Rotation — in sphere mode spin slowly, in tunnel mode spin faster */
+      const spinSpeed = 0.08 + tunnelBlend * 0.12;
+      const rotY = t * spinSpeed;
+      const rotX = Math.sin(t * 0.21) * (0.14 - tunnelBlend * 0.10);
 
       /* Clear */
       ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = '#F8F9FA';
       ctx.fillRect(0, 0, W, H);
 
-      /* Background atmosphere glow */
-      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.6);
-      grd.addColorStop(0,   'rgba(208,228,255,0.50)');
-      grd.addColorStop(0.55,'rgba(225,215,255,0.20)');
-      grd.addColorStop(1,   'transparent');
+      /* Background glow — shifts to center tunnel glow in tunnel mode */
+      const glowCx = W * (curCxFrac * (1 - tunnelBlend) + 0.5 * tunnelBlend);
+      const glowR  = R * (1.6 + tunnelBlend * 1.2);
+      const grd = ctx.createRadialGradient(glowCx, cy, 0, glowCx, cy, glowR);
+      grd.addColorStop(0,    `rgba(200,225,255,${0.50 + tunnelBlend * 0.2})`);
+      grd.addColorStop(0.55, `rgba(220,210,255,${0.18 + tunnelBlend * 0.1})`);
+      grd.addColorStop(1,    'transparent');
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, W, H);
 
-      /* Project all nodes */
-      const proj = nodes.map(n =>
-        project(n.x, n.y, n.z, rotY, rotX, cx, cy, R, curCamAdv)
-      );
+      /* ── Project each node ── */
+      const projected = nodes.map((n, idx) => {
+        const { rx, ry, rz } = rotate(n.x, n.y, n.z, rotY, rotX);
 
-      /* Edges — back to front */
+        // Base depth: camera at z = -FOV + curCamAdv*R (moving into sphere)
+        let baseDepth = rz * R + FOV - curCamAdv * R;
+
+        // In tunnel mode: apply flyZ and tile nodes so they continuously recycle
+        let depth = baseDepth;
+        if (tunnelBlend > 0.05) {
+          // Shift depth by flyZ, then wrap into [10, TILE+10]
+          const shifted = baseDepth - (flyZ % TILE);
+          depth = ((shifted % TILE) + TILE) % TILE + 10;
+          // Blend between sphere depth and tiled tunnel depth
+          depth = baseDepth * (1 - tunnelBlend) + depth * tunnelBlend;
+        }
+
+        if (depth <= 2 || depth > FOV * 2.5) return null;
+
+        const scale = FOV / depth;
+        return {
+          sx:   cx + rx * R * scale,
+          sy:   cy + ry * R * scale,
+          rz,          // raw unit-sphere z for shading
+          depth,       // actual depth for sizing
+          scale,
+        };
+      });
+
+      /* ── EDGES — back to front ── */
       [...edges]
-        .sort((a, b) => {
-          const ra = proj[a[0]]?.rz ?? 2;
-          const rb = proj[b[0]]?.rz ?? 2;
-          return rb - ra;
-        })
+        .sort((a, b) => (projected[a[0]]?.rz ?? 2) - (projected[b[0]]?.rz ?? 2))
+        .reverse()
         .forEach(([i, j]) => {
-          const a = proj[i], b = proj[j];
+          const a = projected[i], b = projected[j];
           if (!a || !b) return;
-          const avgRz = (a.rz + b.rz) / 2;
-          const fac   = df(avgRz);
-          const alpha = 0.04 + fac * 0.60;
+
+          // Sphere shading by rz; tunnel shading by depth (closer = brighter)
+          const facSph    = df((a.rz + b.rz) / 2);
+          const avgDepth  = (a.depth + b.depth) / 2;
+          const facTun    = Math.max(0, 1 - avgDepth / (TILE * 0.9));
+          const fac       = facSph * (1 - tunnelBlend) + facTun * tunnelBlend;
+
+          const alpha = 0.04 + fac * 0.62;
           if (alpha < 0.05) return;
+          const hue   = 215 + (1 - fac) * 25;
+
           ctx.beginPath();
           ctx.moveTo(a.sx, a.sy);
           ctx.lineTo(b.sx, b.sy);
-          ctx.strokeStyle = `hsla(${215 + (1-fac)*25},70%,55%,${alpha.toFixed(2)})`;
-          ctx.lineWidth   = 0.5 + fac * 1.3;
+          ctx.strokeStyle = `hsla(${hue},70%,54%,${alpha.toFixed(2)})`;
+          ctx.lineWidth   = 0.5 + fac * 1.4;
           ctx.stroke();
         });
 
-      /* Nodes — back to front */
+      /* ── NODES — back to front ── */
       nodes
-        .map((n, i) => ({ n, p: proj[i] }))
+        .map((n, i) => ({ n, p: projected[i] }))
         .filter(o => o.p)
-        .sort((a, b) => b.p.rz - a.p.rz)
+        .sort((a, b) => b.p.depth - a.p.depth)
         .forEach(({ n, p }) => {
-          const fac   = df(p.rz);
-          const alpha = 0.05 + fac * 0.92;
-          const dotR  = 0.8 + fac * 8.5;   // back: ~0.8px, front: ~9.3px
+          const facSph  = df(p.rz);
+          const facTun  = Math.max(0, 1 - p.depth / (TILE * 0.9));
+          const fac     = facSph * (1 - tunnelBlend) + facTun * tunnelBlend;
 
-          /* Pulsing glow on prominent front nodes */
-          if (fac > 0.65) {
+          const alpha = 0.05 + fac * 0.92;
+          const dotR  = 0.8 + fac * 8.5;
+
+          /* Glow on vivid front/close nodes */
+          if (fac > 0.6) {
             const pulse = 0.55 + 0.45 * Math.sin(t * 1.7 + n.phase);
             const gr    = ctx.createRadialGradient(p.sx, p.sy, 0, p.sx, p.sy, dotR * 4);
-            gr.addColorStop(0, `hsla(${n.hue},82%,62%,${(fac * 0.32 * pulse).toFixed(2)})`);
+            gr.addColorStop(0, `hsla(${n.hue},85%,62%,${(fac * 0.30 * pulse).toFixed(2)})`);
             gr.addColorStop(1, 'transparent');
             ctx.fillStyle = gr;
             ctx.beginPath();
@@ -183,14 +226,13 @@ export default function Background() {
             ctx.fill();
           }
 
-          /* Dot */
           ctx.beginPath();
           ctx.arc(p.sx, p.sy, Math.max(0.5, dotR), 0, Math.PI * 2);
           ctx.fillStyle = `hsla(${n.hue},82%,48%,${alpha.toFixed(2)})`;
           ctx.fill();
 
-          /* Language label */
-          if (n.label && fac > 0.8 && dotR > 5 && mode !== 'tunnel') {
+          /* Language label — sphere mode only, on close front nodes */
+          if (n.label && !isTunnel && fac > 0.80 && dotR > 5) {
             const fs = Math.min(10, dotR * 1.5);
             ctx.font         = `700 ${fs}px "JetBrains Mono", monospace`;
             ctx.textAlign    = 'center';
