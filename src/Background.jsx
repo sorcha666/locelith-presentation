@@ -28,10 +28,10 @@ const NEIGHBOURS  = 4;
 const FOV_S = 1200;
 
 // Tunnel constants
-const TUBE_R    = 165;   // cylinder radius in px
-const TUBE_LEN  = 900;   // tile length — nodes recycle every 900px
-const FOV_T     = 480;   // tunnel perspective FOV
-const FLY_SPEED = 0.9;   // px per frame — moderate, calm
+const TUBE_R    = 380;   // cylinder radius — nodes spread to screen edges
+const TUBE_LEN  = 2000;  // tile length — lots of breathing room between nodes
+const FOV_T     = 520;   // tunnel perspective FOV
+const FLY_SPEED = 0.4;   // px per frame — slow, calm drift
 
 export default function Background() {
   const canvasRef = useRef(null);
