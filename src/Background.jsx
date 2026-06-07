@@ -186,7 +186,11 @@ export default function Background() {
           }
 
           const avg   = (a.fac+b.fac)/2;
-          const alpha = (0.10 + avg*0.52) * alpha_mult;
+          // Sphere: nearly uniform alpha so all connections visible (3D from node size)
+          // Tunnel: depth-based so far nodes fade (depth cue)
+          const alpha = isTunnelEdge
+            ? (0.06 + avg*0.56) * alpha_mult
+            : (0.22 + avg*0.22) * alpha_mult;
           if(alpha < 0.04) return;
           ctx.beginPath();
           ctx.moveTo(a.sx,a.sy);
