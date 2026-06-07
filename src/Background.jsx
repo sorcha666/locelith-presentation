@@ -25,7 +25,7 @@ const LANG_CODES = [
 const NODE_COUNT = 120;
 const NEIGHBOURS = 4;
 const FOV        = 1200;
-const TILE       = 700;  // recycle period in px — nodes wrap every TILE units
+const TILE       = 1100;  // recycle period — larger = more spread out, calmer
 
 export default function Background() {
   const canvasRef = useRef(null);
@@ -116,7 +116,7 @@ export default function Background() {
 
       /* In tunnel mode: advance flyZ to create continuous forward motion */
       if (isTunnel) {
-        flyZ += 1.8; // speed of flight through tunnel (px per frame)
+        flyZ += 0.3; // slow, calm drift through the network
       } else {
         // Slowly decelerate when returning to sphere
         flyZ *= 0.94;
