@@ -26,7 +26,7 @@ export function S01Cover() {
         </motion.div>
 
         <motion.div variants={vUp} custom={2} style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 52 }}>
-          {['AST Pipeline', 'Qwen-2.5 QLoRA', '112 Languages', 'SaaS Platform', 'Multi-framework SDK'].map(t => (
+          {['AST Pipeline', 'Alibaba Qwen-plus', '112 Languages', 'SaaS Platform', 'Multi-framework SDK'].map(t => (
             <span key={t} className="chip chip-blue">{t}</span>
           ))}
         </motion.div>
@@ -179,10 +179,10 @@ export function S06Objectives() {
         </motion.div>
         <div className="cols-2" style={{ gap: 20 }}>
           {[
-            { n: '01', title: 'AST Translation Pipeline', body: 'A Vault Server that automatically scans source code, extracts UI strings via AST analysis, translates them with a local SLM, and rewrites the source files — end to end.', color: 'var(--blue)', chips: ['Vault Server', 'AST', 'HMAC-SHA256'] },
-            { n: '02', title: 'Fine-Tuned Small Language Model', body: 'A Qwen-2.5 adapter trained via QLoRA on 4.5M UI translation pairs across 112 languages. Deployable on CPU at production scale via llama.cpp + GGUF quantisation.', color: 'var(--purple)', chips: ['QLoRA', '7B', 'GGUF', 'llama.cpp'] },
-            { n: '03', title: 'SaaS Management Platform', body: 'A complete web application covering subscription management, developer documentation, API key governance, usage analytics, and a Stripe-integrated billing portal.', color: 'var(--cyan)', chips: ['Next.js', 'Stripe', 'Analytics'] },
-            { n: '04', title: 'Multi-Framework SDK', body: 'Four published npm packages — @locelith/core, /react, /angular, /vanilla — enabling any team to integrate localisation via a single CLI command or programmatic API.', color: 'var(--green)', chips: ['React', 'Angular', 'CLI', 'npm'] },
+            { n: '01', title: 'AST Translation Pipeline', body: 'A Vault Server that automatically scans source code, extracts UI strings via AST analysis, translates them via Alibaba Qwen-plus or Groq Cloud, and rewrites source files — end to end.', color: 'var(--blue)', chips: ['Vault Server', 'AST', 'HMAC-SHA256'] },
+            { n: '02', title: 'AI Quality Pipeline', body: 'A translation quality scoring system built on a trained Keras model (400K+ synthetic pairs) with PII sanitisation via DataSanitizationService and multi-provider fallback (Alibaba → Groq).', color: 'var(--purple)', chips: ['Keras', 'QualityService', 'Alibaba', 'Groq'] },
+            { n: '03', title: 'SaaS Management Platform', body: 'A complete web application covering subscription management, developer documentation, API key governance, usage analytics, admin panel, and a Stripe-integrated billing portal.', color: 'var(--cyan)', chips: ['Vite', 'React 18', 'Stripe', 'Recharts'] },
+            { n: '04', title: 'Multi-Framework SDK', body: 'Four published npm packages — @locelith/core (CLI), @locelith/react, locelith-angular, @locelith/vanilla — enabling any team to integrate localisation via a single CLI command.', color: 'var(--green)', chips: ['React', 'Angular', 'CLI', 'npm'] },
           ].map((d, i) => (
             <motion.div key={d.n} variants={vUp} custom={i + 1} className="card"
               style={{ display: 'flex', gap: 20, padding: '24px 28px', borderLeft: `3px solid ${d.color}`, borderRadius: 12 }}>
