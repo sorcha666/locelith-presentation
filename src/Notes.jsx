@@ -6,27 +6,42 @@
 export const NOTES = {
   s01: {
     speaker: 'Both',
-    text: `Good morning. We are Sarra Chtioui and Oussama Elkamel, 4th-year students at EPI Digital School Sousse.\n\nToday we present Locelith — an AI-assisted framework that automates multilingual content extraction, translation, and delivery in web applications. PFA 2025/2026.`,
+    text: `Good morning to the jury, our professors, and everyone present today.
+
+We are Sarra Chtioui and Oussama Elkamel, fourth-year students in Software and AI Engineering at EPI Digital School Sousse. Today we are proud to present our end-of-year project: Locelith.
+
+Locelith is an AI-assisted framework that fully automates the localisation lifecycle of web applications — from extracting text in the source code, to translating it with AI, to delivering it at runtime in the user's language. All of this happens with a single command, without any manual file management.
+
+We will walk you through seven chapters covering the context, the state of the art, our specifications, the architecture we designed, the implementation we built, our tests, and our conclusions. Let's begin.`,
   },
+
   s02: {
     speaker: 'Oussama',
-    text: `Chapter 1 sets the stage. We'll show why language is the first real barrier to global software reach, and introduce the organisation where this project was built.`,
+    text: `Chapter 1 — General Context and Host Organisation.
+
+In this chapter, we will explain why the problem of software localisation is not just a translation challenge — it is a deep engineering and business problem that the industry has not yet fully solved. We will also present the host organisation and the academic framework of this project.`,
   },
+
   s03: {
     speaker: 'Oussama',
-    text: `Three hard numbers:\n• 72.4% of consumers prefer their native language\n• 40% higher conversion with localised UIs\n• $7,600 billion global localisation market\n\nLanguage is not a nice-to-have. It is the infrastructure of global reach.`,
+    text: `Let's start with the numbers, because they tell a very clear story.
+
+72.4% of consumers say they prefer to use a product in their native language. Not "it would be nice" — they prefer it. 40% higher conversion rates are recorded on platforms that are localised compared to those that are English-only. And the global localisation market has already reached 7,600 billion dollars.
+
+What this tells us is simple: language is the first barrier to global reach. You can build the best product in the world, but if it only speaks one language, you have already excluded the majority of your potential users from day one.
+
+And yet, the infrastructure to support multilingual applications remains, today, fundamentally broken. It is slow, expensive, and manual. That is the problem Locelith was built to solve.`,
   },
-  s04: {
-    speaker: 'Oussama',
-    text: `The "Localisation Tax":\n• 25–30% extra dev effort when i18n is added late\n• 58% of teams have delayed a launch for localisation\n• Commercial APIs (DeepL, Google) charge per character — costs are unbounded\n\nKey quote: "No existing tool goes from raw source code to production multilingual app in one automated step."`,
-  },
+
   s05: {
     speaker: 'Oussama',
-    text: `Host organisation: Synervy Technologies, Sousse — AI-driven SaaS company.\n\nInstitution: EPI Digital School — École Polytechnique Internationale.\nDuration: 24 weeks · February–July 2026\nMethodology: Scrumban · 12 sprints · WIP limit 2`,
-  },
-  s06: {
-    speaker: 'Oussama',
-    text: `Four deliverables — one ecosystem:\n1. AST Translation Pipeline (Vault Server + Alibaba Qwen-plus / Groq)\n2. AI Quality Pipeline (Keras model, 400K+ pairs, PII sanitisation)\n3. SaaS Management Platform (Vite + React 18 + Stripe)\n4. Multi-Framework SDK (React · Angular · Vanilla · CLI — npm published)`,
+    text: `This project was carried out over 24 weeks within Synervy Technologies — an IT company based in Sousse, Tunisia, specialising in AI-driven product development and SaaS solutions. The company provided the engineering environment, the infrastructure, and the real-world product context that shaped every decision in this project.
+
+Institutionally, this work is submitted as our End-of-Year Project at EPI Digital School — École Polytechnique Internationale, under joint academic and industrial supervision.
+
+The project ran from February to July 2026. We adopted a Scrumban methodology — combining the structure of Scrum sprints with the flow control of Kanban — across 12 sprints, with a WIP limit of two tasks per developer at any time. This allowed us to maintain velocity while managing the complexity of building four simultaneous deliverables.
+
+Those four deliverables are: the AST Translation Pipeline, the AI Quality Pipeline, the SaaS Management Platform, and the Multi-Framework SDK. Together, they form one integrated ecosystem — which we will detail throughout this presentation.`,
   },
   s07: {
     speaker: 'Sarra',

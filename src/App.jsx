@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Background from './Background';
 import NotesPanel from './Notes';
 
-import { S01Cover, S02Ch1Intro, S03Stat, S04Tax, S05Host, S06Objectives } from './Chapter1';
+import { S01Cover, S02Ch1Intro, S03Stat, S05Host } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S09Comparison, S10Problem, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault, S17SDK, S18Database } from './Chapter4';
 import { S19Ch5Intro, S20TechStack, S21Terminal, S22Providers, S23Quality, S24Pipeline, S25SaaS, S26Deployment } from './Chapter5';
@@ -14,9 +14,7 @@ const SLIDES = [
   { id: 's01', ch: 0, label: 'Cover' },
   { id: 's02', ch: 1, label: 'Ch.1 Context' },
   { id: 's03', ch: 1, label: 'Impact' },
-  { id: 's04', ch: 1, label: 'Tax' },
   { id: 's05', ch: 1, label: 'Host Org' },
-  { id: 's06', ch: 1, label: 'Objectives' },
   { id: 's07', ch: 2, label: 'Ch.2 SoA' },
   { id: 's08', ch: 2, label: 'Workflow' },
   { id: 's09', ch: 2, label: 'Comparison' },
@@ -210,9 +208,7 @@ export default function App() {
         <S01Cover />
         <S02Ch1Intro />
         <S03Stat />
-        <S04Tax />
         <S05Host />
-        <S06Objectives />
         <S07Ch2Intro />
         <S08Workflow />
         <S09Comparison />
