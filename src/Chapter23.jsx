@@ -182,8 +182,11 @@ export function S12Actors() {
             ))}
           </div>
         </motion.div>
-        <motion.div variants={vUp} custom={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src="/global_usecase.png" alt="Global Use Case Diagram" style={{ width: '100%', maxWidth: 500, borderRadius: 12, border: '1px solid var(--border)' }} />
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', flexDirection: 'column', alignSelf: 'stretch' }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 16 }}>Core Use Case Diagram</div>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#ffffff', borderRadius: 12, border: '1px solid var(--border)', padding: 10 }}>
+            <img src="/global_usecase.png" alt="Global Use Case Diagram" style={{ width: '100%', maxHeight: 460, objectFit: 'contain' }} />
+          </div>
         </motion.div>
       </div>
     </Slide>
