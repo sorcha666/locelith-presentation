@@ -46,6 +46,11 @@ const SLIDES = [
 
 const CH_COLORS = ['#4F6EF7', '#4F6EF7', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#4F6EF7'];
 
+// Chapter title/intro slides — excluded from content slide numbering
+const CHAPTER_TITLE_IDS = new Set(['s02','s07','s11','s14','s19','s27','s29']);
+const CONTENT_SLIDES = SLIDES.filter(s => !CHAPTER_TITLE_IDS.has(s.id));
+const CONTENT_TOTAL  = CONTENT_SLIDES.length;
+
 export default function App() {
   const [active, setActive] = useState(0);
   const lenisRef = useRef(null);
@@ -92,8 +97,10 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [active]);
 
-  const pct = ((active + 1) / SLIDES.length) * 100;
   const cur = SLIDES[active];
+  const isChapterTitle = CHAPTER_TITLE_IDS.has(cur?.id);
+  const contentIdx = isChapterTitle ? null : CONTENT_SLIDES.findIndex(s => s.id === cur?.id) + 1;
+  const pct = contentIdx ? (contentIdx / CONTENT_TOTAL) * 100 : ((active + 1) / SLIDES.length) * 100;
 
   return (
     <>
@@ -122,7 +129,9 @@ export default function App() {
         <motion.div key={active} className="slide-counter"
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.25 }}>
-          <span>{String(active + 1).padStart(2, '0')}</span> / {String(SLIDES.length).padStart(2, '0')} — {cur.label}
+          {isChapterTitle
+            ? <span style={{ letterSpacing: '0.08em' }}>Chapter {cur.ch}</span>
+            : <><span>{String(contentIdx).padStart(2, '0')}</span> / {String(CONTENT_TOTAL).padStart(2, '0')} — {cur.label}</>}
         </motion.div>
       </AnimatePresence>
 
