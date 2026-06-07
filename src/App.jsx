@@ -170,7 +170,18 @@ export default function App() {
       {/* Top progress bar */}
       <div className="progress-bar" style={{ width: `${pct}%` }} />
 
-      {/* Chapter nav */}
+      {/* Slide counter */}
+      <AnimatePresence mode="wait">
+        <motion.div key={active} className="slide-counter"
+          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.25 }}>
+          {isChapterTitle
+            ? <span style={{ letterSpacing: '0.08em' }}>Chapter {cur.ch}</span>
+            : <><span>{String(contentIdx).padStart(2, '0')}</span> / {String(CONTENT_TOTAL).padStart(2, '0')} — {cur.label}</>}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Chapter nav — bottom center */}
       <nav className="chapter-nav">
         {[1,2,3,4,5,6,7].map(ch => {
           const isCurCh = cur.ch === ch;
@@ -184,21 +195,6 @@ export default function App() {
           );
         })}
       </nav>
-
-      {/* Slide counter */}
-      <AnimatePresence mode="wait">
-        <motion.div key={active} className="slide-counter"
-          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.25 }}>
-          {isChapterTitle
-            ? <span style={{ letterSpacing: '0.08em' }}>Chapter {cur.ch}</span>
-            : <><span>{String(contentIdx).padStart(2, '0')}</span> / {String(CONTENT_TOTAL).padStart(2, '0')} — {cur.label}</>}
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="nav-hint">
-        <span>↑↓</span> navigate
-      </div>
 
       {/* All slides */}
       <main>

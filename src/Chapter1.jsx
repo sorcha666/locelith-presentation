@@ -44,11 +44,6 @@ export function S01Cover() {
         </motion.div>
       </div>
 
-      <motion.div variants={vFade} custom={4} style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)' }}>
-        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity }}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.62rem', color: 'var(--t4)', letterSpacing: '0.15em' }}>SCROLL TO INITIATE</div>
-        </motion.div>
-      </motion.div>
     </Slide>
   );
 }

@@ -79,7 +79,7 @@ body {
 ══════════════════════════════════════ */
 .chapter-nav {
   position: fixed;
-  top: 28px; left: 50%;
+  bottom: 28px; left: 50%;
   transform: translateX(-50%);
   z-index: 500;
   display: flex;
@@ -118,18 +118,6 @@ body {
 }
 .slide-counter span { color: var(--blue); }
 
-.nav-hint {
-  position: fixed;
-  bottom: 28px; left: 40px;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--t4);
-  z-index: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-}
 
 /* ══════════════════════════════════════
    SLIDES
