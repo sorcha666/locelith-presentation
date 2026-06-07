@@ -22,7 +22,7 @@ const LANG_CODES = [
 
 const NODE_COUNT = 120;
 const NEIGHBOURS = 5;
-const FOV        = 1000;
+const FOV        = 2000;  // large FOV keeps all nodes in front of camera even when R is big
 
 export default function Background() {
   const canvasRef = useRef(null);
@@ -80,13 +80,14 @@ export default function Background() {
       const mode      = window.__bgMode || 'cover';
       const isExpanded = mode === 'tunnel'; // content slides → expand
 
-      // Target radius: compact sphere vs canvas-filling sphere
-      const targetR      = isExpanded ? 1.6 : 0.27;
+      // Target radius: compact sphere vs large expanded sphere
+      // R must stay < FOV to avoid front nodes getting negative depth
+      // FOV=2000, max R = 0.80*min(W,H) ≈ 768px → front depth = -768+2000 = +1232 ✓
+      const targetR      = isExpanded ? 0.80 : 0.27;
       const targetCxFrac = mode === 'cover' ? 0.72 : 0.5;
 
-      // Smooth lerp (slow expansion = cinematic)
-      const lerpSpeed = isExpanded ? 0.018 : 0.025;
-      curR      += (targetR      - curR)      * lerpSpeed;
+      // Slow cinematic lerp
+      curR      += (targetR      - curR)      * (isExpanded ? 0.012 : 0.020);
       curCxFrac += (targetCxFrac - curCxFrac) * 0.025;
 
       const R  = Math.min(W, H) * curR;
