@@ -56,7 +56,8 @@ export default function App() {
   const lenisRef = useRef(null);
 
   useEffect(() => {
-    const lenis = new Lenis({ lerp: 0.075, smoothWheel: true });
+    // smoothWheel: false — we handle wheel events ourselves for snap navigation
+    const lenis = new Lenis({ lerp: 0.09, smoothWheel: false });
     lenisRef.current = lenis;
     const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
@@ -88,6 +89,47 @@ export default function App() {
     else window.__bgMode = 'tunnel';
   }, [active]);
 
+  // ── Wheel snap navigation ──
+  const activeRef = useRef(active);
+  useEffect(() => { activeRef.current = active; }, [active]);
+
+  useEffect(() => {
+    let blocked = false;
+    const onWheel = e => {
+      e.preventDefault();
+      if (blocked) return;
+      blocked = true;
+      setTimeout(() => { blocked = false; }, 750); // debounce: one slide per 750ms
+      const next = e.deltaY > 0
+        ? Math.min(activeRef.current + 1, SLIDES.length - 1)
+        : Math.max(activeRef.current - 1, 0);
+      goTo(next);
+    };
+    window.addEventListener('wheel', onWheel, { passive: false });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, []); // runs once — uses activeRef to avoid stale closure
+
+  // ── Touch swipe (for tablet presenting) ──
+  useEffect(() => {
+    let startY = 0;
+    const onTouchStart = e => { startY = e.touches[0].clientY; };
+    const onTouchEnd   = e => {
+      const dy = startY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) < 40) return;
+      const next = dy > 0
+        ? Math.min(activeRef.current + 1, SLIDES.length - 1)
+        : Math.max(activeRef.current - 1, 0);
+      goTo(next);
+    };
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend',   onTouchEnd,   { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend',   onTouchEnd);
+    };
+  }, []);
+
+  // ── Keyboard navigation ──
   useEffect(() => {
     const onKey = e => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(active + 1, SLIDES.length - 1));
