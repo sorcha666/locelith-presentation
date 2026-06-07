@@ -30,7 +30,7 @@ export default function Background() {
     let W, H, raf, t = 0;
 
     let curCamAdv = 0;
-    let curCxFrac = 0.65;
+    let curCxFrac = 0.72;
 
     const resize = () => {
       W = canvas.width  = window.innerWidth;
@@ -107,7 +107,7 @@ export default function Background() {
 
       const mode = window.__bgMode || 'cover';
       const targetCamAdv = mode === 'tunnel' ? 2.0 : 0;
-      const targetCxFrac = mode === 'cover'  ? 0.65 : 0.5;
+      const targetCxFrac = mode === 'cover'  ? 0.72 : 0.5;
 
       curCamAdv += (targetCamAdv - curCamAdv) * 0.03;
       curCxFrac += (targetCxFrac - curCxFrac) * 0.03;
