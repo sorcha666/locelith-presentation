@@ -20,24 +20,23 @@ export function S14Ch4Intro() {
 
 export function S15Architecture() {
   const layers = [
-    { name: 'SDK / CLI Layer', desc: '@locelith/core · /react · /angular · /vanilla', color: 'var(--blue)', side: 'Client' },
-    { name: 'Vault Server', desc: 'HMAC auth · AST scanner · PII filter · Cache · SLM proxy', color: 'var(--purple)', side: 'Edge' },
-    { name: 'Business API', desc: 'JWT · Prisma ORM · Usage tracking · Stripe webhooks', color: 'var(--cyan)', side: 'Platform' },
-    { name: 'AI Inference Layer', desc: 'FastAPI · Locelith-7B GGUF · Double-Pass pipeline', color: 'var(--amber)', side: 'Intelligence' },
-    { name: 'Data Layer', desc: 'PostgreSQL (relational) · MongoDB (translations) · File cache (JSON)', color: 'var(--green)', side: 'Persistence' },
+    { name: 'Client Layer', desc: 'React SPA Dashboard · @locelith/react SDK · Developer CLI Tool', color: 'var(--amber)', side: 'Frontend' },
+    { name: 'API Gateway', desc: 'Auth/JWT · Rate Limiting · Stripe Webhooks · MCP Server', color: 'var(--blue)', side: 'Routing' },
+    { name: 'Service Layer', desc: 'TranslationSvc · ScrapingEngine · CacheManager', color: 'var(--purple)', side: 'Processing' },
+    { name: 'Persistence', desc: 'PostgreSQL (Prisma) · MongoDB · JSON File Cache', color: 'var(--cyan)', side: 'Data' },
   ];
 
   return (
     <Slide id="s15" className="slide slide-light">
-      <div className="cols-2-3" style={{ gap: 56, alignItems: 'center' }}>
+      <div className="cols-2" style={{ gap: 56, alignItems: 'center' }}>
         <motion.div variants={vUp} custom={0}>
-          <div className="eyebrow">Global Architecture</div>
-          <h2 className="title-md" style={{ marginBottom: 16 }}>Five layers.<br /><span className="grad">Zero single point of failure.</span></h2>
+          <div className="eyebrow">System Architecture</div>
+          <h2 className="title-md" style={{ marginBottom: 16 }}>Multi-tier design.<br /><span className="grad">Built for scalability.</span></h2>
           <p className="body-sm" style={{ marginBottom: 28 }}>
-            A micro-service design with three independent Node.js processes, a Python inference service, and a dual-database persistence strategy — all connected through authenticated HTTP.
+            Locelith implements a robust multi-tier architecture, establishing a strict separation of concerns between client interfaces, secure gateway routing, core NLP services, and dual-database persistence.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[{ label: 'Services', val: '3 Node.js + 1 FastAPI' }, { label: 'Databases', val: 'PostgreSQL + MongoDB' }, { label: 'SDK packages', val: '4 (npm published)' }, { label: 'Auth model', val: 'JWT + HMAC-SHA256' }].map(i => (
+            {[{ label: 'Frameworks', val: 'React 18, Node/Express, Puppeteer' }, { label: 'Inference', val: 'Groq AI / llama.cpp (GGUF)' }, { label: 'Databases', val: 'PostgreSQL + MongoDB' }].map(i => (
               <div key={i.label} style={{ display: 'flex', gap: 12 }}>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: '0.68rem', color: 'var(--t4)', width: 100, flexShrink: 0 }}>{i.label}</span>
                 <span style={{ fontSize: '0.82rem', color: 'var(--t2)', fontWeight: 500 }}>{i.val}</span>
@@ -45,16 +44,16 @@ export function S15Architecture() {
             ))}
           </div>
         </motion.div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {layers.map((l, i) => (
             <motion.div key={l.name} variants={vLeft} custom={i + 1}
-              style={{ display: 'flex', gap: 16, padding: '16px 20px', borderRadius: 12, background: `${l.color}08`, border: `1px solid ${l.color}22`, alignItems: 'center' }}>
-              <div style={{ width: 6, height: 6, borderRadius: '50%', background: l.color, flexShrink: 0 }} />
+              style={{ display: 'flex', gap: 16, padding: '20px', borderRadius: 12, background: `${l.color}08`, border: `1px solid ${l.color}22`, alignItems: 'center' }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: l.color, flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: '0.88rem', color: l.color, marginBottom: 3 }}>{l.name}</div>
-                <div className="body-xs">{l.desc}</div>
+                <div style={{ fontWeight: 800, fontSize: '0.9rem', color: l.color, marginBottom: 4 }}>{l.name}</div>
+                <div className="body-xs" style={{ color: 'var(--t3)' }}>{l.desc}</div>
               </div>
-              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.6rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', flexShrink: 0 }}>{l.side}</div>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', flexShrink: 0 }}>{l.side}</div>
             </motion.div>
           ))}
         </div>
