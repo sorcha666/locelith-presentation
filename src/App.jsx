@@ -75,6 +75,15 @@ export default function App() {
   };
 
   useEffect(() => {
+    const COVER_SLIDES  = new Set(['s01']);
+    const SPHERE_SLIDES = new Set(['s02','s07','s11','s14','s19','s27','s29','s32']);
+    const id = SLIDES[active]?.id;
+    if (COVER_SLIDES.has(id))  window.__bgMode = 'cover';
+    else if (SPHERE_SLIDES.has(id)) window.__bgMode = 'sphere';
+    else window.__bgMode = 'tunnel';
+  }, [active]);
+
+  useEffect(() => {
     const onKey = e => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goTo(Math.min(active + 1, SLIDES.length - 1));
       if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goTo(Math.max(active - 1, 0));
