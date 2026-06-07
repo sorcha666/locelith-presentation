@@ -12,6 +12,7 @@ export function S01Cover() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
             <img src="/locelithai.png" alt="Locelith" style={{ height: 56, objectFit: 'contain' }} />
             <div style={{ width: 1, height: 40, background: 'var(--border2)' }} />
+            <img src="/epi-logo.png" alt="EPI Digital School" style={{ height: 44, objectFit: 'contain' }} />
             <div style={{ fontFamily: 'var(--mono)', fontSize: '0.68rem', color: 'var(--t4)', letterSpacing: '0.15em', textTransform: 'uppercase', lineHeight: 1.7 }}>
               PFA — 2025 / 2026<br />EPI Digital School · Sousse
             </div>
