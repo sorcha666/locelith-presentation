@@ -79,60 +79,68 @@ export default function Background() {
       }
     }
 
-    /* ── Perspective projection ── */
+    /* ── Perspective projection — pure forward-facing, no Y rotation ── */
     const FOV = 340;
-    const project = (x, y, z, camZ, rotY) => {
-      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-      const rx = x * cosY + z * sinY;
-      const ry = y;
-      const rz = -x * sinY + z * cosY;
-
-      const depth = rz - camZ;
+    const project = (x, y, z, camZ) => {
+      const depth = z - camZ;
       if (depth <= 8) return null;
-
       const scale = FOV / depth;
-      return { sx: W * 0.5 + rx * scale, sy: H * 0.5 + ry * scale, scale, depth };
+      return {
+        sx: W * 0.5 + x * scale,
+        sy: H * 0.5 + y * scale,
+        scale,
+        depth,
+      };
     };
 
     /* ── Draw loop ── */
-    const RENDER_AHEAD = SEGMENT_LEN * 2.2; // how far ahead we render nodes
-    const FADE_START   = SEGMENT_LEN * 1.4; // depth at which nodes start fading
+    const RENDER_AHEAD = SEGMENT_LEN * 2.2;
+    const FADE_START   = SEGMENT_LEN * 1.4;
 
     const draw = () => {
       t += 0.005;
 
-      // Camera travels a fraction of SEGMENT_LEN — it loops seamlessly
-      const camZ  = scrollProgress * SEGMENT_LEN * 0.82;
-      const rotY  = t * 0.055;
-      const swayX = Math.sin(t * 0.21) * 5;
-      const swayY = Math.cos(t * 0.16) * 3;
+      // Camera travels down the center Z-axis — always perfectly centered
+      const camZ = scrollProgress * SEGMENT_LEN * 0.82;
+
+      // Slow Z-axis barrel roll: rotates X/Y of each node around the tunnel axis
+      // This keeps the tunnel CENTER stable — just spins the ring of nodes
+      const rotZ = t * 0.018;
+      const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
+
+      // Very subtle screen-space sway (applied AFTER projection, not to world coords)
+      const swayX = Math.sin(t * 0.18) * 4;
+      const swayY = Math.cos(t * 0.14) * 2.5;
 
       // Clear
       ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = '#FAFAFA';
       ctx.fillRect(0, 0, W, H);
 
-      // Radial glow at vanishing point
-      const grd = ctx.createRadialGradient(W/2+swayX, H/2+swayY, 0, W/2+swayX, H/2+swayY, W*0.6);
+      // Radial glow — always at exact center
+      const grd = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, W * 0.6);
       grd.addColorStop(0,   'rgba(219,234,254,0.65)');
       grd.addColorStop(0.5, 'rgba(237,233,254,0.25)');
       grd.addColorStop(1,   'transparent');
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, W, H);
 
-      /* Project nodes — for each node we tile it across multiple segments
-         (the node's world Z = n.zOffset + k*SEGMENT_LEN for integer k)
-         We find the k value that places it just ahead of the camera. */
+      /* Project nodes — tiled across segments, Z-barrel-rolled */
       const projected = baseNodes.map(n => {
-        // Find the nearest segment copy that is AHEAD of camZ
-        const raw = n.zOffset;
-        // How many full segments ahead of camZ?
-        const segOffset = Math.floor((camZ - raw) / SEGMENT_LEN) + 1;
-        const worldZ = raw + segOffset * SEGMENT_LEN;
+        const segOffset = Math.floor((camZ - n.zOffset) / SEGMENT_LEN) + 1;
+        const worldZ = n.zOffset + segOffset * SEGMENT_LEN;
         const depth = worldZ - camZ;
-
         if (depth < 8 || depth > RENDER_AHEAD) return null;
-        return project(n.x + swayX * 0.07, n.y + swayY * 0.07, worldZ, camZ, rotY);
+
+        // Apply Z-axis barrel roll to X,Y (keeps tunnel centered)
+        const rx = n.x * cosZ - n.y * sinZ;
+        const ry = n.x * sinZ + n.y * cosZ;
+
+        const p = project(rx, ry, worldZ, camZ);
+        if (!p) return null;
+
+        // Apply screen-space sway AFTER projection
+        return { ...p, sx: p.sx + swayX, sy: p.sy + swayY };
       });
 
       /* Draw edges */
