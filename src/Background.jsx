@@ -28,7 +28,7 @@ const S_NEIGH     = 3;     // sphere neighbours
 const TUBE_R      = 320;   // all nodes on this radius → perfect circle ring
 const TUBE_LEN    = 2200;  // depth tile — lots of breathing room
 const FOV_T       = 560;
-const FLY_SPEED   = 0.35;  // calm drift
+const FLY_SPEED   = 0.55;  // slightly faster for stronger 3D immersion
 const T_NEIGH     = 2;     // tunnel neighbours — sparse, clean
 
 export default function Background() {
@@ -172,10 +172,19 @@ export default function Background() {
       });
 
       /* Draw edges — blend between sphere-edges and tunnel-edges */
-      const drawEdges = (edgeList, alpha_mult) => {
+      const drawEdges = (edgeList, alpha_mult, isTunnelEdge) => {
         edgeList.forEach(([i,j]) => {
           const a=projected[i], b=projected[j];
           if(!a||!b) return;
+
+          // Skip wrap-around edges: if both nodes have very different effective Z,
+          // one has recycled and the other hasn't — would draw a backward line
+          if (isTunnelEdge && tunnelBlend > 0.3) {
+            const rawZa = ((nodes[i].tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
+            const rawZb = ((nodes[j].tz - flyZ) % TUBE_LEN + TUBE_LEN) % TUBE_LEN;
+            if (Math.abs(rawZa - rawZb) > TUBE_LEN * 0.38) return;
+          }
+
           const avg   = (a.fac+b.fac)/2;
           const alpha = (0.04 + avg*0.55) * alpha_mult;
           if(alpha < 0.04) return;
@@ -188,9 +197,8 @@ export default function Background() {
         });
       };
 
-      // Sphere edges fade out as tunnel fades in, tunnel edges fade in
-      drawEdges(sphereEdges, 1 - tunnelBlend);
-      drawEdges(tunnelEdges, tunnelBlend);
+      drawEdges(sphereEdges, 1 - tunnelBlend, false);
+      drawEdges(tunnelEdges, tunnelBlend,     true);
 
       /* Draw nodes */
       nodes
