@@ -69,20 +69,25 @@ export function S15Architecture() {
             ))}
           </div>
         </motion.div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center', width: '100%', maxWidth: 480 }}>
           {tiers.map((t, i) => (
-            <motion.div key={t.name} variants={vLeft} custom={i + 1}
-              style={{ padding: '14px 18px', borderRadius: 12, background: `color-mix(in srgb, ${t.color} 6%, transparent)`, border: `1px solid color-mix(in srgb, ${t.color} 22%, transparent)` }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <div style={{ fontWeight: 700, fontSize: '0.88rem', color: t.color }}>{t.name}</div>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.6rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{t.tag}</div>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 10px' }}>
-                {t.items.map(item => (
-                  <span key={item} style={{ fontSize: '0.73rem', color: 'var(--t3)' }}>· {item}</span>
-                ))}
-              </div>
-            </motion.div>
+            <div key={t.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              <motion.div variants={vLeft} custom={i + 1}
+                style={{ width: '100%', padding: '14px 18px', borderRadius: 12, background: `color-mix(in srgb, ${t.color} 8%, var(--surface))`, border: `2px solid color-mix(in srgb, ${t.color} 30%, transparent)`, textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>{t.tag}</div>
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: t.color, marginBottom: 10 }}>{t.name}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px 8px' }}>
+                  {t.items.map(item => (
+                    <span key={item} style={{ fontSize: '0.68rem', color: 'var(--t3)', background: 'var(--surface)', padding: '3px 8px', borderRadius: 6, border: '1px solid var(--border)' }}>{item}</span>
+                  ))}
+                </div>
+              </motion.div>
+              {i < tiers.length - 1 && (
+                <motion.div variants={vFade} custom={i + 1.5} style={{ color: 'var(--border2)', padding: '6px 0' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="22"></line><polyline points="18 16 12 22 6 16"></polyline></svg>
+                </motion.div>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -117,21 +122,26 @@ export function S16Vault() {
         </motion.div>
         <motion.div variants={vUp} custom={1}>
           <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>5-Stage Pipeline</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {/* Vertical connecting line */}
+            <div style={{ position: 'absolute', left: 19, top: 20, bottom: 20, width: 2, background: 'var(--border2)', zIndex: 0 }} />
+            
             {[
-              { step: '01', label: 'Framework Detection', desc: 'package.json inspection → select Strategy', color: 'var(--blue)' },
-              { step: '02', label: 'AST Scan', desc: 'Babel parser walks JSX tree, extracts hardcoded strings', color: 'var(--blue)' },
-              { step: '03', label: 'PII Sanitise', desc: 'Masks emails, phones, card numbers with reversible placeholders', color: 'var(--purple)' },
-              { step: '04', label: 'SLM Translate', desc: '3-level cache: JSON → PostgreSQL → SLM inference', color: 'var(--cyan)' },
-              { step: '05', label: 'AST Rewrite', desc: "Injects t('key') calls + useTranslation imports into source", color: 'var(--green)' },
+              { step: '1', label: 'Framework Detection', desc: 'package.json inspection → select Strategy', color: 'var(--blue)' },
+              { step: '2', label: 'AST Scan', desc: 'Babel parser walks JSX tree, extracts strings', color: 'var(--blue)' },
+              { step: '3', label: 'PII Sanitise', desc: 'Masks emails, phones, card numbers with placeholders', color: 'var(--purple)' },
+              { step: '4', label: 'SLM Translate', desc: '3-level cache: JSON → PostgreSQL → SLM inference', color: 'var(--cyan)' },
+              { step: '5', label: 'AST Rewrite', desc: "Injects t('key') + useTranslation imports into source", color: 'var(--green)' },
             ].map((s, i) => (
-              <div key={s.step} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '10px 14px', borderRadius: 8, background: i % 2 === 0 ? 'var(--surface)' : 'transparent', border: i % 2 === 0 ? '1px solid var(--border)' : 'none' }}>
-                <div style={{ width: 24, height: 24, borderRadius: 6, background: `color-mix(in srgb, ${s.color} 15%, transparent)`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--mono)', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{s.step}</div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.82rem', color: s.color, marginBottom: 2 }}>{s.label}</div>
+              <motion.div key={s.step} variants={vLeft} custom={i + 2} style={{ display: 'flex', gap: 16, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface)', border: `2px solid ${s.color}`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--mono)', fontSize: '0.85rem', fontWeight: 800, flexShrink: 0, boxShadow: '0 0 0 4px var(--bg)' }}>
+                  {s.step}
+                </div>
+                <div style={{ flex: 1, background: 'var(--surface)', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.82rem', color: s.color, marginBottom: 4 }}>{s.label}</div>
                   <div style={{ fontSize: '0.73rem', color: 'var(--t3)' }}>{s.desc}</div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
