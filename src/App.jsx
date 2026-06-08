@@ -4,17 +4,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Background from './Background';
 import NotesPanel from './Notes';
 
-import { S01Cover, S02Ch1Intro, S03Stat, S05Host } from './Chapter1';
+import { S01Cover, S02Ch1Intro, S03Stat } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S09Comparison, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
 import { S19Ch5Intro, S21Terminal, S22Providers, S23Quality, S25SaaS, S26Deployment } from './Chapter5';
-import { S27Ch6Intro, S28AST, S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
+import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
 
 const SLIDES = [
   { id: 's01', ch: 0, label: 'Cover' },
   { id: 's02', ch: 1, label: 'Ch.1 Context' },
   { id: 's03', ch: 1, label: 'Impact' },
-  { id: 's05', ch: 1, label: 'Host Org' },
   { id: 's07', ch: 2, label: 'Ch.2 SoA' },
   { id: 's08', ch: 2, label: 'Workflow' },
   { id: 's09', ch: 2, label: 'Comparison' },
@@ -30,18 +29,16 @@ const SLIDES = [
   { id: 's23', ch: 5, label: 'Quality' },
   { id: 's25', ch: 5, label: 'SaaS Platform' },
   { id: 's26', ch: 5, label: 'Deployment' },
-  { id: 's27', ch: 6, label: 'Ch.6 Tests' },
-  { id: 's28', ch: 6, label: 'Validation' },
-  { id: 's29', ch: 7, label: 'Ch.7 Concl.' },
-  { id: 's30', ch: 7, label: 'Achievements' },
-  { id: 's31', ch: 7, label: 'Perspectives' },
-  { id: 's32', ch: 7, label: 'Closing' },
+  { id: 's29', ch: 6, label: 'Ch.6 Concl.' },
+  { id: 's30', ch: 6, label: 'Achievements' },
+  { id: 's31', ch: 6, label: 'Perspectives' },
+  { id: 's32', ch: 6, label: 'Closing' },
 ];
 
 const CH_COLORS = ['#4F6EF7', '#4F6EF7', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#4F6EF7'];
 
 // Chapter title/intro slides — excluded from content slide numbering
-const CHAPTER_TITLE_IDS = new Set(['s02','s07','s11','s14','s19','s27','s29']);
+const CHAPTER_TITLE_IDS = new Set(['s02','s07','s11','s14','s19','s29']);
 const CONTENT_SLIDES = SLIDES.filter(s => !CHAPTER_TITLE_IDS.has(s.id));
 const CONTENT_TOTAL  = CONTENT_SLIDES.length;
 
@@ -77,7 +74,7 @@ export default function App() {
 
   useEffect(() => {
     const COVER_SLIDES  = new Set(['s01']);
-    const SPHERE_SLIDES = new Set(['s02','s07','s11','s14','s19','s27','s29','s32']);
+    const SPHERE_SLIDES = new Set(['s02','s07','s11','s14','s19','s29','s32']);
     const id = SLIDES[active]?.id;
     if (COVER_SLIDES.has(id))  window.__bgMode = 'cover';
     else if (SPHERE_SLIDES.has(id)) window.__bgMode = 'sphere';
@@ -180,7 +177,7 @@ export default function App() {
 
       {/* Chapter nav — bottom center */}
       <nav className="chapter-nav">
-        {[1,2,3,4,5,6,7].map(ch => {
+        {[1,2,3,4,5,6].map(ch => {
           const isCurCh = cur.ch === ch;
           return (
             <div key={ch}
@@ -203,7 +200,6 @@ export default function App() {
         <S01Cover />
         <S02Ch1Intro />
         <S03Stat />
-        <S05Host />
         <S07Ch2Intro />
         <S08Workflow />
         <S09Comparison />
@@ -219,8 +215,6 @@ export default function App() {
         <S23Quality />
         <S25SaaS />
         <S26Deployment />
-        <S27Ch6Intro />
-        <S28AST />
         <S29Ch7Intro />
         <S30Achievements />
         <S31Perspectives />
