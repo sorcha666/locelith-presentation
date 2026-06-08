@@ -51,7 +51,7 @@ export function S15Architecture() {
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
         <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 48 }}>
           <div className="eyebrow">Global Architecture</div>
-          <h2 className="title-md">Four-layer microservice design.<br /><span className="grad">Zero single point of failure.</span></h2>
+          <h2 className="title-md">Three-tier architecture.<br /><span className="grad">Zero single point of failure.</span></h2>
         </motion.div>
 
         {/* HORIZONTAL ARCHITECTURE DIAGRAM */}
@@ -68,9 +68,9 @@ export function S15Architecture() {
             </div>
           </motion.div>
 
-          {/* ARROW */}
-          <motion.div variants={vFade} custom={1.5} style={{ display: 'flex', alignItems: 'center', color: 'var(--border2)' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline><polyline points="10 18 4 12 10 6"></polyline></svg>
+          {/* ARROW → */}
+          <motion.div variants={vFade} custom={1.5} style={{ display: 'flex', alignItems: 'center', color: 'var(--border2)', flexShrink: 0 }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </motion.div>
 
           {/* BACKEND TIER (Gateway + Services) */}
@@ -82,8 +82,8 @@ export function S15Architecture() {
                 <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--blue)', marginBottom: 4, textAlign: 'center' }}>API Gateway</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--t3)', textAlign: 'center' }}>JWT Auth · HMAC-SHA256 · Rate Limiting</div>
               </div>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--border2)" strokeWidth="2"><line x1="12" y1="2" x2="12" y2="22"></line><polyline points="18 16 12 22 6 16"></polyline><polyline points="6 8 12 2 18 8"></polyline></svg>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center', padding: '4px 0' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--border2)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="5 12 12 19 19 12"></polyline></svg>
               </div>
               <div style={{ background: 'var(--surface)', padding: '12px', borderRadius: 8, border: '1px solid var(--cyan)' }}>
                 <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--cyan)', marginBottom: 4, textAlign: 'center' }}>Service Layer</div>
@@ -92,9 +92,9 @@ export function S15Architecture() {
             </div>
           </motion.div>
 
-          {/* ARROW */}
-          <motion.div variants={vFade} custom={2.5} style={{ display: 'flex', alignItems: 'center', color: 'var(--border2)' }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline><polyline points="10 18 4 12 10 6"></polyline></svg>
+          {/* ARROW → */}
+          <motion.div variants={vFade} custom={2.5} style={{ display: 'flex', alignItems: 'center', color: 'var(--border2)', flexShrink: 0 }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </motion.div>
 
           {/* DATA TIER */}
