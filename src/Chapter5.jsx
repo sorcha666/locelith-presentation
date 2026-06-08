@@ -180,6 +180,13 @@ export function S21Benchmark() {
                 <td style={{ color: 'var(--red)' }}>Capacity Collapse</td>
               </tr>
               <tr>
+                <td style={{ fontWeight: 600 }}>1.5B</td>
+                <td style={{ textAlign: 'center' }}>40.78</td>
+                <td style={{ textAlign: 'center' }}>72.61</td>
+                <td style={{ textAlign: 'center', fontFamily: 'var(--mono)' }}>~1.5 GB</td>
+                <td style={{ color: 'var(--amber)' }}>Underpowered</td>
+              </tr>
+              <tr>
                 <td style={{ fontWeight: 600 }}>3B</td>
                 <td style={{ textAlign: 'center' }}>48.21</td>
                 <td style={{ textAlign: 'center' }}>76.14</td>
