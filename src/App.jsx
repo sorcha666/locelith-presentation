@@ -5,7 +5,7 @@ import Background from './Background';
 import NotesPanel from './Notes';
 
 import { S01Cover, S02Ch1Intro, S03Stat } from './Chapter1';
-import { S07Ch2Intro, S08Workflow, S09Comparison, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
+import { S07Ch2Intro, S08Workflow, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
 import { S19Ch5Intro, S21Terminal, S22Providers, S23Quality, S25SaaS, S26Deployment } from './Chapter5';
 import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
@@ -16,7 +16,6 @@ const SLIDES = [
   { id: 's03', ch: 1, label: 'Impact' },
   { id: 's07', ch: 2, label: 'Ch.2 SoA' },
   { id: 's08', ch: 2, label: 'Workflow' },
-  { id: 's09', ch: 2, label: 'Comparison' },
   { id: 's11', ch: 3, label: 'Ch.3 Specs' },
   { id: 's12', ch: 3, label: 'Actors' },
   { id: 's13', ch: 3, label: 'NFR' },
@@ -202,7 +201,6 @@ export default function App() {
         <S03Stat />
         <S07Ch2Intro />
         <S08Workflow />
-        <S09Comparison />
         <S11Ch3Intro />
         <S12Actors />
         <S13NFR />
