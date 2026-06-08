@@ -55,7 +55,6 @@ export function S08Workflow() {
           <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>Consequence</div>
           {[
             { val: '6–12 weeks', desc: 'average time to localise a medium-sized web app' },
-            { val: '$40K+', desc: 'average cost for a 20-language initial deployment' },
             { val: '3× rework', desc: 'when product copy changes post-launch' },
           ].map(r => (
             <div key={r.val} className="card" style={{ padding: '18px 22px', borderLeft: '3px solid var(--border2)' }}>
