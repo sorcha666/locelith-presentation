@@ -21,8 +21,11 @@ export function S01Cover() {
 
         <motion.div variants={vUp} custom={1}>
           <h1 className="title-xl" style={{ marginBottom: 16 }}>Locelith</h1>
-          <p style={{ fontSize: '1.25rem', color: 'var(--t3)', lineHeight: 1.55, fontWeight: 400, marginBottom: 48, maxWidth: 600 }}>
-            An AI-assisted framework for automating the extraction, translation, and management of multilingual content in web applications.
+          <p style={{ fontSize: '1.1rem', color: 'var(--t3)', lineHeight: 1.55, fontWeight: 500, marginBottom: 12, maxWidth: 640 }}>
+            AI-Assisted Web App Internationalisation Framework
+          </p>
+          <p style={{ fontSize: '0.9rem', color: 'var(--t4)', lineHeight: 1.55, fontWeight: 400, marginBottom: 48, maxWidth: 600 }}>
+            Automating the extraction, translation, and runtime delivery of multilingual content in web applications — end to end.
           </p>
         </motion.div>
 
@@ -60,11 +63,11 @@ export function S01bAgenda() {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[
-            { num: '01', title: 'General Context', desc: 'The globalisation imperative and localisation tax' },
-            { num: '02', title: 'State of the Art', desc: 'Existing solutions, workflows, and their limitations' },
-            { num: '03', title: 'System Specifications', desc: 'Functional and non-functional requirements' },
-            { num: '04', title: 'Architecture & Design', desc: 'Locelith Vault, CLI, SaaS platform, and AST pipeline' },
-            { num: '05', title: 'SLM Engineering', desc: 'Data prep, model benchmarking, LoRA training, and deployment' },
+            { num: '01', title: 'General Context', desc: 'The globalisation imperative and the localisation tax' },
+            { num: '02', title: 'State of the Art & Problematic', desc: 'Existing solutions, workflows, and their limitations' },
+            { num: '03', title: 'System Specifications', desc: 'Actors, functional and non-functional requirements' },
+            { num: '04', title: 'Architecture & Design', desc: 'Locelith Vault, AST pipeline, SaaS platform, and SDK' },
+            { num: '05', title: 'SLM Engineering', desc: 'Data collection, QLoRA training, evaluation, and deployment' },
             { num: '06', title: 'Conclusion & Perspectives', desc: 'Project achievements and future work' },
           ].map((item, i) => (
             <motion.div key={item.num} variants={vLeft} custom={i + 1} style={{ display: 'flex', gap: 20, alignItems: 'center', padding: '16px 20px', background: 'var(--surface)', borderRadius: 12, border: '1px solid var(--border)' }}>
