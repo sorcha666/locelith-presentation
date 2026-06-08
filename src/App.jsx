@@ -7,7 +7,7 @@ import NotesPanel from './Notes';
 import { S01Cover, S02Ch1Intro, S03Stat } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
-import { S19Ch5Intro, S21Terminal, S22Providers, S23Quality, S25SaaS, S26Deployment } from './Chapter5';
+import { S19Ch5Intro, S21Terminal, S22Providers, S25SaaS } from './Chapter5';
 import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
 
 const SLIDES = [
@@ -25,9 +25,7 @@ const SLIDES = [
   { id: 's19', ch: 5, label: 'Ch.5 Impl' },
   { id: 's21', ch: 5, label: 'Demo' },
   { id: 's22', ch: 5, label: 'Providers' },
-  { id: 's23', ch: 5, label: 'Quality' },
   { id: 's25', ch: 5, label: 'SaaS Platform' },
-  { id: 's26', ch: 5, label: 'Deployment' },
   { id: 's29', ch: 6, label: 'Ch.6 Concl.' },
   { id: 's30', ch: 6, label: 'Achievements' },
   { id: 's31', ch: 6, label: 'Perspectives' },
@@ -210,9 +208,7 @@ export default function App() {
         <S19Ch5Intro />
         <S21Terminal />
         <S22Providers />
-        <S23Quality />
         <S25SaaS />
-        <S26Deployment />
         <S29Ch7Intro />
         <S30Achievements />
         <S31Perspectives />
