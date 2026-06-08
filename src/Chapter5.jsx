@@ -137,78 +137,54 @@ export function S21Benchmark() {
   return (
     <Slide id="s21" className="slide slide-light">
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
-        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 20 }}>
+        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 30 }}>
           <div className="eyebrow" style={{ justifyContent: 'center' }}>Multi-Scale Evaluation</div>
           <h2 className="title-md">Finding the <span className="grad">Capacity Threshold.</span></h2>
           <p className="subtitle" style={{ margin: '0 auto', maxWidth: 800 }}>Evaluated on a 510-pair held-out benchmark across 5 parameter scales. At 0.5B, the model collapses due to insufficient attention heads for 112 languages.</p>
         </motion.div>
 
-        {/* Charts Grid */}
-        <motion.div variants={vUp} custom={1} style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 24 }}>
+        {/* Charts Grid with Embedded Metrics */}
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 24 }}>
           {[
-            { scale: '0.5B', img: '/0_5b_chart.png' },
-            { scale: '1.5B', img: '/1_5b_chart.png' },
-            { scale: '3B', img: '/3b_chart.png' },
-            { scale: '7B', img: '/7b_chart.png' },
-            { scale: '14B', img: '/14b_chart.png' },
+            { scale: '0.5B', img: '/0_5b_chart.png', bleu: '12.45', chrf: '35.60', vram: '~0.8 GB', verdict: 'Capacity Collapse', color: 'var(--red)' },
+            { scale: '1.5B', img: '/1_5b_chart.png', bleu: '40.78', chrf: '72.61', vram: '~1.5 GB', verdict: 'Underpowered', color: 'var(--amber)' },
+            { scale: '3B', img: '/3b_chart.png', bleu: '48.21', chrf: '76.14', vram: '~2.8 GB', verdict: 'Moderate, Lacks Depth', color: 'var(--t3)' },
+            { scale: '7B', img: '/7b_chart.png', bleu: '61.34', chrf: '83.42', vram: '~5.8 GB', verdict: 'Winner — Optimal', color: 'var(--green)', glow: true },
+            { scale: '14B', img: '/14b_chart.png', bleu: '65.10', chrf: '85.91', vram: '~11.0 GB', verdict: 'Exceeds 4GB Target', color: 'var(--blue)' },
           ].map(c => (
-            <div key={c.scale} style={{ background: '#fff', borderRadius: 8, padding: 8, border: '1px solid var(--border)', textAlign: 'center', width: '18%' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 800, marginBottom: 6, color: 'var(--t1)' }}>{c.scale}</div>
-              <img src={c.img} alt={`${c.scale} Benchmark`} style={{ width: '100%', height: 'auto', borderRadius: 4 }} />
+            <div key={c.scale} style={{ 
+              background: c.glow ? 'rgba(16,185,129,0.05)' : '#fff', 
+              borderRadius: 12, 
+              padding: 12, 
+              border: c.glow ? '2px solid var(--green)' : '1px solid var(--border)', 
+              textAlign: 'center', 
+              flex: 1,
+              boxShadow: c.glow ? '0 8px 30px rgba(16,185,129,0.15)' : 'none'
+            }}>
+              <div style={{ fontSize: '1.1rem', fontWeight: 900, marginBottom: 8, color: c.glow ? 'var(--green)' : 'var(--t1)' }}>{c.scale}</div>
+              <img src={c.img} alt={`${c.scale} Benchmark`} style={{ width: '100%', height: 'auto', borderRadius: 6, marginBottom: 16, border: '1px solid var(--border2)' }} />
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 6px', marginBottom: 16, textAlign: 'left', padding: '0 8px' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--t3)' }}>BLEU</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.bleu}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--t3)' }}>chrF</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.chrf}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--t3)' }}>VRAM</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'right', fontFamily: 'var(--mono)' }}>{c.vram}</div>
+              </div>
+
+              <div style={{ 
+                background: `color-mix(in srgb, ${c.color} 15%, transparent)`, 
+                color: c.color, 
+                padding: '8px 0', 
+                borderRadius: 6, 
+                fontSize: '0.75rem', 
+                fontWeight: 800 
+              }}>
+                {c.verdict}
+              </div>
             </div>
           ))}
-        </motion.div>
-
-        {/* Winner Table */}
-        <motion.div variants={vUp} custom={2} className="card" style={{ padding: 0, overflow: 'hidden', margin: '0 auto', width: '100%', maxWidth: 900 }}>
-          <table className="data-table" style={{ margin: 0 }}>
-            <thead>
-              <tr>
-                <th>Model Scale</th>
-                <th style={{ textAlign: 'center' }}>BLEU</th>
-                <th style={{ textAlign: 'center' }}>chrF</th>
-                <th style={{ textAlign: 'center' }}>4-bit VRAM</th>
-                <th>Verdict</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ fontWeight: 600 }}>0.5B</td>
-                <td style={{ textAlign: 'center', color: 'var(--red)' }}>12.45</td>
-                <td style={{ textAlign: 'center', color: 'var(--red)' }}>35.60</td>
-                <td style={{ textAlign: 'center', fontFamily: 'var(--mono)' }}>~0.8 GB</td>
-                <td style={{ color: 'var(--red)' }}>Capacity Collapse</td>
-              </tr>
-              <tr>
-                <td style={{ fontWeight: 600 }}>1.5B</td>
-                <td style={{ textAlign: 'center' }}>40.78</td>
-                <td style={{ textAlign: 'center' }}>72.61</td>
-                <td style={{ textAlign: 'center', fontFamily: 'var(--mono)' }}>~1.5 GB</td>
-                <td style={{ color: 'var(--amber)' }}>Underpowered</td>
-              </tr>
-              <tr>
-                <td style={{ fontWeight: 600 }}>3B</td>
-                <td style={{ textAlign: 'center' }}>48.21</td>
-                <td style={{ textAlign: 'center' }}>76.14</td>
-                <td style={{ textAlign: 'center', fontFamily: 'var(--mono)' }}>~2.8 GB</td>
-                <td style={{ color: 'var(--t3)' }}>Moderate, lacks depth</td>
-              </tr>
-              <tr style={{ background: 'rgba(16,185,129,0.05)' }}>
-                <td style={{ fontWeight: 800, color: 'var(--green)' }}>7B (Winner)</td>
-                <td style={{ textAlign: 'center', color: 'var(--green)', fontWeight: 800 }}>61.34</td>
-                <td style={{ textAlign: 'center', color: 'var(--green)', fontWeight: 800 }}>83.42</td>
-                <td style={{ textAlign: 'center', fontFamily: 'var(--mono)', color: 'var(--green)' }}>~5.8 GB</td>
-                <td style={{ color: 'var(--green)', fontWeight: 800 }}>Optimal Quality/Cost</td>
-              </tr>
-              <tr>
-                <td style={{ fontWeight: 600 }}>14B</td>
-                <td style={{ textAlign: 'center', color: 'var(--blue)' }}>65.10</td>
-                <td style={{ textAlign: 'center', color: 'var(--blue)' }}>85.91</td>
-                <td style={{ textAlign: 'center', fontFamily: 'var(--mono)' }}>~11.0 GB</td>
-                <td style={{ color: 'var(--amber)' }}>Exceeds 4GB target</td>
-              </tr>
-            </tbody>
-          </table>
         </motion.div>
       </div>
     </Slide>
