@@ -7,7 +7,6 @@ import NotesPanel from './Notes';
 import { S01Cover, S02Ch1Intro, S03Stat } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
-import { S19Ch5Intro, S25SaaS } from './Chapter5';
 import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
 
 const SLIDES = [
@@ -22,18 +21,16 @@ const SLIDES = [
   { id: 's14', ch: 4, label: 'Ch.4 Arch' },
   { id: 's15', ch: 4, label: 'Architecture' },
   { id: 's16', ch: 4, label: 'Pipeline' },
-  { id: 's19', ch: 5, label: 'Ch.5 Impl' },
-  { id: 's25', ch: 5, label: 'SaaS Platform' },
-  { id: 's29', ch: 6, label: 'Ch.6 Concl.' },
-  { id: 's30', ch: 6, label: 'Achievements' },
-  { id: 's31', ch: 6, label: 'Perspectives' },
-  { id: 's32', ch: 6, label: 'Closing' },
+  { id: 's29', ch: 5, label: 'Ch.5 Concl.' },
+  { id: 's30', ch: 5, label: 'Achievements' },
+  { id: 's31', ch: 5, label: 'Perspectives' },
+  { id: 's32', ch: 5, label: 'Closing' },
 ];
 
 const CH_COLORS = ['#4F6EF7', '#4F6EF7', '#8B5CF6', '#06B6D4', '#F59E0B', '#10B981', '#EF4444', '#4F6EF7'];
 
 // Chapter title/intro slides — excluded from content slide numbering
-const CHAPTER_TITLE_IDS = new Set(['s02','s07','s11','s14','s19','s29']);
+const CHAPTER_TITLE_IDS = new Set(['s02','s07','s11','s14','s29']);
 const CONTENT_SLIDES = SLIDES.filter(s => !CHAPTER_TITLE_IDS.has(s.id));
 const CONTENT_TOTAL  = CONTENT_SLIDES.length;
 
@@ -69,7 +66,7 @@ export default function App() {
 
   useEffect(() => {
     const COVER_SLIDES  = new Set(['s01']);
-    const SPHERE_SLIDES = new Set(['s02','s07','s11','s14','s19','s29','s32']);
+    const SPHERE_SLIDES = new Set(['s02','s07','s11','s14','s29','s32']);
     const id = SLIDES[active]?.id;
     if (COVER_SLIDES.has(id))  window.__bgMode = 'cover';
     else if (SPHERE_SLIDES.has(id)) window.__bgMode = 'sphere';
@@ -172,7 +169,7 @@ export default function App() {
 
       {/* Chapter nav — bottom center */}
       <nav className="chapter-nav">
-        {[1,2,3,4,5,6].map(ch => {
+        {[1,2,3,4,5].map(ch => {
           const isCurCh = cur.ch === ch;
           return (
             <div key={ch}
@@ -203,8 +200,6 @@ export default function App() {
         <S14Ch4Intro />
         <S15Architecture />
         <S16Vault />
-        <S19Ch5Intro />
-        <S25SaaS />
         <S29Ch7Intro />
         <S30Achievements />
         <S31Perspectives />

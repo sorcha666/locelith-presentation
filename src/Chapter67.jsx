@@ -115,7 +115,7 @@ export function S29Ch7Intro() {
     <Slide id="s29" className="slide slide-chapter">
       <div style={{ textAlign: 'center' }}>
         <motion.div variants={vUp} custom={0}>
-          <div className="ch-badge">Chapter 06</div>
+          <div className="ch-badge">Chapter 05</div>
           <h2 className="title-lg" style={{ marginBottom: 16 }}>Conclusion &amp;<br /><span className="grad">Future Perspectives</span></h2>
           <p className="subtitle" style={{ margin: '0 auto' }}>What was built, what was learned, and where the work leads next.</p>
         </motion.div>
