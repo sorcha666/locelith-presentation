@@ -151,7 +151,7 @@ export function S16Vault() {
               { step: '1', label: 'Framework Detection', desc: 'package.json inspection → selects Strategy', color: 'var(--blue)' },
               { step: '2', label: 'AST Scan', desc: 'Babel parser walks JSX tree, extracts strings', color: 'var(--blue)' },
               { step: '3', label: 'PII Sanitise', desc: 'Masks sensitive data with reversible placeholders', color: 'var(--purple)' },
-              { step: '4', label: 'SLM Inference', desc: 'Queries cache, translates missing strings via AI', color: 'var(--cyan)' },
+              { step: '4', label: 'SLM Inference & Scoring', desc: 'Translates strings + scores quality via trained QualityModel (3-level cache: JSON → DB → SLM)', color: 'var(--cyan)' },
               { step: '5', label: 'AST Rewrite', desc: "Injects t('key') + useTranslation imports into source", color: 'var(--green)' },
             ].map((s, i) => (
               <motion.div key={s.step} variants={vLeft} custom={i + 2} style={{ display: 'flex', gap: 16, alignItems: 'center', position: 'relative', zIndex: 1 }}>
