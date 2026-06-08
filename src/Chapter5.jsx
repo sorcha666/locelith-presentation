@@ -176,6 +176,10 @@ export function S21Benchmark() {
                 <div style={{ fontSize: '0.75rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.bleu}</div>
                 <div style={{ fontSize: '0.65rem', color: 'var(--t3)' }}>chrF</div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.chrf}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--t3)' }}>HW Fit</div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, textAlign: 'right', fontFamily: 'var(--mono)', color: 'var(--t1)' }}>{c.vram}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--t3)' }}>Verdict</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: 800, textAlign: 'right', color: c.color }}>{c.verdict}</div>
               </div>
 
               <div style={{ 
