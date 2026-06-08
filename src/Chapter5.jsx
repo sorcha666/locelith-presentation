@@ -137,14 +137,14 @@ export function S21Benchmark() {
   return (
     <Slide id="s21" className="slide slide-light">
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
-        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 30 }}>
+        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 16 }}>
           <div className="eyebrow" style={{ justifyContent: 'center' }}>Multi-Scale Evaluation</div>
           <h2 className="title-md">Finding the <span className="grad">Capacity Threshold.</span></h2>
-          <p className="subtitle" style={{ margin: '0 auto', maxWidth: 800 }}>Evaluated on a 510-pair held-out benchmark across 5 parameter scales. At 0.5B, the model collapses due to insufficient attention heads for 112 languages.</p>
+          <p style={{ margin: '4px auto 0', maxWidth: 800, fontSize: '0.78rem', color: 'var(--t3)' }}>Evaluated on a 510-pair held-out benchmark across 5 parameter scales. At 0.5B, the model collapses due to insufficient attention heads for 112 languages.</p>
         </motion.div>
 
         {/* Charts Grid with Embedded Metrics */}
-        <motion.div variants={vUp} custom={1} style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 24 }}>
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', justifyContent: 'center', gap: 16, flex: 1 }}>
           {[
             { scale: '0.5B', img: '/0_5b_chart.png', bleu: '12.45', chrf: '35.60', vram: '~0.8 GB', verdict: 'Capacity Collapse', color: 'var(--red)' },
             { scale: '1.5B', img: '/1_5b_chart.png', bleu: '40.78', chrf: '72.61', vram: '~1.5 GB', verdict: 'Underpowered', color: 'var(--amber)' },
@@ -154,11 +154,13 @@ export function S21Benchmark() {
           ].map(c => (
             <div key={c.scale} style={{ 
               background: c.glow ? 'rgba(16,185,129,0.05)' : '#fff', 
-              borderRadius: 12, 
-              padding: 12, 
+              borderRadius: 14, 
+              padding: 18, 
               border: c.glow ? '2px solid var(--green)' : '1px solid var(--border)', 
               textAlign: 'center', 
               flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
               boxShadow: c.glow ? '0 8px 30px rgba(16,185,129,0.15)' : 'none'
             }}>
               <div style={{ fontSize: '1.1rem', fontWeight: 900, marginBottom: 8, color: c.glow ? 'var(--green)' : 'var(--t1)' }}>{c.scale}</div>
