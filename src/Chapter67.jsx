@@ -52,9 +52,9 @@ export function S28AST() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
                 { t: 'npx locelith init', note: 'Config + .locelithignore + translations/ scaffolded' },
-                { t: 'npx locelith translate --langs=fr,es', note: '247 strings · 5 langs · 34 files rewritten' },
-                { t: 'npx locelith revert --dry-run', note: 'Preview mode — zero writes applied' },
-                { t: 'npx locelith verify', note: '0 missing keys · 0 structural mismatches' },
+                { t: 'npx locelith translate --langs=fr,es,ar', note: '247 strings · 3 langs · 34 files rewritten' },
+                { t: 'npx locelith scan', note: 'Extraction only — 247 strings found, 0 missed' },
+                { t: 'npx locelith backup', note: 'Snapshot created before modifications' },
               ].map(item => (
                 <div key={item.t} style={{ display: 'flex', gap: 10, padding: '10px 14px', borderRadius: 10, background: 'var(--surface)', border: '1px solid var(--border)' }}>
                   <span style={{ color: 'var(--green)', flexShrink: 0 }}>✓</span>

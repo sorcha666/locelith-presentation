@@ -56,7 +56,7 @@ export function S21Terminal() {
         <motion.div variants={vUp} custom={0}>
           <div className="eyebrow">Live Pipeline Demo</div>
           <h2 className="title-md" style={{ marginBottom: 16 }}>From source code<br />to <span className="grad">multilingual app.</span><br />One command.</h2>
-          <p className="body-sm">The pipeline syncs with the Vault Server, scans ASTs, sanitises PII, resolves cache hits, calls Alibaba Qwen-plus for translations, and rewrites all source files — fully automated.</p>
+          <p className="body-sm">The pipeline syncs with the Vault Server, scans ASTs, sanitises PII, resolves cache hits, runs Locelith SLM inference for translations, scores quality, and rewrites all source files — fully automated.</p>
         </motion.div>
         <motion.div variants={vUp} custom={1}>
           <div className="term">
@@ -65,13 +65,13 @@ export function S21Terminal() {
               <span style={{ marginLeft: 10, fontFamily: 'var(--mono)', fontSize: '0.68rem', color: '#64748B' }}>bash — my-react-app</span>
             </div>
             <div className="term-body">
-              <div className="term-line"><span className="tc-prompt">$ </span><span className="tc-cmd"><Type text="locelith run" delay={500} /></span></div>
+              <div className="term-line"><span className="tc-prompt">$ </span><span className="tc-cmd"><Type text="npx locelith translate --langs=fr,es,ar" delay={500} /></span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Framework detected: React 18 (JSX)</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">AST scan complete — 247 strings extracted</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">PII sanitised (2 email addresses masked)</span></div>
-              <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Translations: Alibaba Qwen-plus · 5 languages</span></div>
-              <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Source rewrite: t() injected in 34 files</span></div>
-              <div className="term-line"><span className="tc-success">✔ Done. Your app now speaks 5 languages.</span></div>
+              <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Locelith SLM inference · 3 languages translated</span></div>
+              <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Quality scored · t() injected in 34 files</span></div>
+              <div className="term-line"><span className="tc-success">✔ Done. Your app now speaks 3 languages.</span></div>
             </div>
           </div>
         </motion.div>
@@ -87,12 +87,12 @@ export function S22Providers() {
       <div>
         <motion.div variants={vUp} custom={0} style={{ marginBottom: 40 }}>
           <div className="eyebrow">Translation Infrastructure</div>
-          <h2 className="title-md">Multi-provider strategy.<br /><span className="grad">Zero single point of failure.</span></h2>
+          <h2 className="title-md">Custom SLM first.<br /><span className="grad">Cloud APIs as fallback.</span></h2>
         </motion.div>
         <div className="cols-2" style={{ gap: 32, marginBottom: 32 }}>
           {[
-            { name: 'Alibaba Cloud · Qwen-plus', role: 'Primary provider', color: 'var(--blue)', desc: 'State-of-the-art multilingual model with strong coverage across Arabic, French, German, Italian and 100+ languages. Selected for translation quality and competitive API pricing.', badges: ['qwen-plus', '100+ langs', 'Primary'] },
-            { name: 'Groq Cloud · LLaMA 3.3 70B', role: 'Fallback provider', color: 'var(--purple)', desc: 'Ultra-fast inference via Groq LPU. Activated automatically when Alibaba API is unavailable, ensuring continuous pipeline operation with no manual intervention.', badges: ['llama-3.3-70b', 'Failover', 'Low latency'] },
+            { name: 'Locelith SLM (FastAPI)', role: 'Primary provider', color: 'var(--blue)', desc: 'Custom fine-tuned small language model trained on 4.5M multilingual pairs using Unsloth + PEFT + TRL. Deployed via FastAPI (GGUF Q4_K_M on CPU via llama.cpp). BLEU: 61.34 · chrF: 83.42.', badges: ['Custom SLM', 'GGUF Q4_K_M', 'BLEU 61.34'] },
+            { name: 'Alibaba Qwen-plus / Groq Cloud', role: 'Cloud fallback', color: 'var(--purple)', desc: 'Cloud APIs activated automatically when the local SLM is unavailable. Alibaba Qwen-plus is tried first, then Groq LLaMA 3.3 70B — ensuring continuous pipeline operation with zero manual intervention.', badges: ['Qwen-plus', 'LLaMA 3.3 70B', 'Failover'] },
           ].map((p, i) => (
             <motion.div key={p.name} variants={vUp} custom={i + 1} className="card" style={{ borderLeft: `3px solid ${p.color}` }}>
               <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>{p.role}</div>
@@ -108,19 +108,17 @@ export function S22Providers() {
           <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>Provider Selection Logic</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'nowrap', overflowX: 'auto' }}>
             {[
-              { label: 'ALIBABA_API_KEY?', color: 'var(--blue)' },
+              { label: 'Locelith SLM\navailable?', color: 'var(--blue)' },
               null,
-              { label: 'Use qwen-plus', color: 'var(--green)' },
+              { label: 'SLM Inference\n(FastAPI)', color: 'var(--green)' },
               null,
-              { label: 'GROQ_API_KEY?', color: 'var(--purple)' },
+              { label: 'Alibaba\nQwen-plus', color: 'var(--purple)' },
               null,
-              { label: 'Use llama-3.3-70b', color: 'var(--amber)' },
-              null,
-              { label: 'Fallback: Alibaba', color: 'var(--red)' },
+              { label: 'Groq\nLLaMA 3.3 70B', color: 'var(--amber)' },
             ].map((item, i) => item === null
               ? <div key={i} className="flow-arrow">→</div>
-              : <div key={i} className="flow-node" style={{ borderColor: item.color, background: `${item.color}0A`, textAlign: 'center', minWidth: 130 }}>
-                  <div style={{ fontFamily: 'var(--mono)', fontWeight: 700, fontSize: '0.78rem', color: item.color }}>{item.label}</div>
+              : <div key={i} className="flow-node" style={{ borderColor: item.color, background: `${item.color}0A`, textAlign: 'center', minWidth: 120, whiteSpace: 'pre-line' }}>
+                  <div style={{ fontFamily: 'var(--mono)', fontWeight: 700, fontSize: '0.75rem', color: item.color }}>{item.label}</div>
                 </div>
             )}
           </div>
