@@ -174,37 +174,11 @@ export function S16Vault() {
 export function S17SDK() {
   return (
     <Slide id="s17" className="slide slide-light">
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
         <motion.div variants={vUp} custom={0} style={{ marginBottom: 36 }}>
           <div className="eyebrow">SDK Architecture</div>
           <h2 className="title-md">Four packages. Every framework.<br /><span className="grad">One pipeline command.</span></h2>
         </motion.div>
-        <div className="cols-2" style={{ gap: 16, marginBottom: 20 }}>
-          {[
-            { pkg: '@locelith/core', abbr: 'CLI', color: 'var(--blue)', cmds: ['init', 'translate', 'scan', 'replace', 'backup'], desc: 'Developer-facing CLI. Scaffolds configs (init), executes full pipeline (translate), runs isolated stages (scan, replace), and snaps states (backup).' },
-            { pkg: '@locelith/react', abbr: 'R', color: '#00D8FF', cmds: ['<LocelithProvider>', 'useTranslation()', '<LanguageSelector />'], desc: 'React Context provider + runtime hook. Zero-reload language switching with lazy-loaded locale bundles.' },
-            { pkg: 'locelith-angular', abbr: 'A', color: '#DD0031', cmds: ['locelithTranslate (pipe)', 'LocelithModule', 'Angular DI'], desc: 'Angular module with a declarative template pipe. Fully compatible with Angular dependency injection.' },
-            { pkg: '@locelith/vanilla', abbr: 'JS', color: 'var(--amber)', cmds: ['locelith.t("key")', 'ESM + CJS dual output'], desc: 'Zero-dependency JS API. Works in any JavaScript environment including legacy apps.' },
-          ].map((s, i) => (
-            <motion.div key={s.pkg} variants={vUp} custom={i + 1} className="card" style={{ display: 'flex', gap: 16, padding: '20px 22px', borderTop: `2px solid ${s.color}` }}>
-              <div style={{ width: 38, height: 38, borderRadius: 8, background: `color-mix(in srgb, ${s.color} 15%, transparent)`, color: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, flexShrink: 0, fontFamily: 'var(--mono)', fontSize: '0.75rem' }}>{s.abbr}</div>
-              <div>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.78rem', fontWeight: 700, color: s.color, marginBottom: 6 }}>{s.pkg}</div>
-                <p className="body-xs" style={{ marginBottom: 10, lineHeight: 1.6 }}>{s.desc}</p>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  {s.cmds.map(c => <span key={c} style={{ fontFamily: 'var(--mono)', fontSize: '0.62rem', background: 'var(--bg2)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4, color: 'var(--t3)' }}>{c}</span>)}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        <motion.div variants={vUp} custom={5} style={{ display: 'flex', gap: 12 }}>
-          {[
-            { label: 'Strategy', desc: 'Per-framework scanner & replacer' },
-            { label: 'Observer (SSE)', desc: 'Real-time pipeline events' },
-            { label: 'Repository', desc: 'Prisma data access layer' },
-            { label: 'Facade', desc: 'Unified SDK API surface' },
-            { label: 'Command', desc: 'CLI command encapsulation' },
           ].map(p => (
             <div key={p.label} style={{ flex: 1, padding: '10px 14px', borderRadius: 10, background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.12)', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, fontSize: '0.75rem', color: 'var(--blue)', marginBottom: 3 }}>{p.label}</div>
