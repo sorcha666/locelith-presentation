@@ -48,47 +48,68 @@ export function S15Architecture() {
 
   return (
     <Slide id="s15" className="slide slide-light">
-      <div className="cols-2" style={{ gap: 56, alignItems: 'center' }}>
-        <motion.div variants={vUp} custom={0}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
+        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 48 }}>
           <div className="eyebrow">Global Architecture</div>
-          <h2 className="title-md" style={{ marginBottom: 16 }}>Four-layer architecture.<br /><span className="grad">Zero single point of failure.</span></h2>
-          <p className="body-sm" style={{ marginBottom: 28 }}>
-            An independent micro-service design: three Node.js processes, one FastAPI inference server, and a dual-database persistence strategy — all connected through authenticated HTTP.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[
-              { label: 'Full-Stack', val: 'Node.js · Express · React · Vite · Prisma' },
-              { label: 'AI Stack', val: 'Unsloth · PEFT · TRL · llama.cpp · FastAPI' },
-              { label: 'Infra', val: 'Railway · Docker · GGUF · Stripe' },
-              { label: 'Auth Model', val: 'JWT + HMAC-SHA256' },
-            ].map(i => (
-              <div key={i.label} style={{ display: 'flex', gap: 12 }}>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: '0.68rem', color: 'var(--t4)', width: 80, flexShrink: 0 }}>{i.label}</span>
-                <span style={{ fontSize: '0.82rem', color: 'var(--t2)', fontWeight: 500 }}>{i.val}</span>
-              </div>
-            ))}
-          </div>
+          <h2 className="title-md">Four-layer microservice design.<br /><span className="grad">Zero single point of failure.</span></h2>
         </motion.div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center', width: '100%', maxWidth: 480 }}>
-          {tiers.map((t, i) => (
-            <div key={t.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-              <motion.div variants={vLeft} custom={i + 1}
-                style={{ width: '100%', padding: '14px 18px', borderRadius: 12, background: `color-mix(in srgb, ${t.color} 8%, var(--surface))`, border: `2px solid color-mix(in srgb, ${t.color} 30%, transparent)`, textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>{t.tag}</div>
-                <div style={{ fontWeight: 800, fontSize: '0.95rem', color: t.color, marginBottom: 10 }}>{t.name}</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px 8px' }}>
-                  {t.items.map(item => (
-                    <span key={item} style={{ fontSize: '0.68rem', color: 'var(--t3)', background: 'var(--surface)', padding: '3px 8px', borderRadius: 6, border: '1px solid var(--border)' }}>{item}</span>
-                  ))}
-                </div>
-              </motion.div>
-              {i < tiers.length - 1 && (
-                <motion.div variants={vFade} custom={i + 1.5} style={{ color: 'var(--border2)', padding: '6px 0' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="22"></line><polyline points="18 16 12 22 6 16"></polyline></svg>
-                </motion.div>
-              )}
+
+        {/* HORIZONTAL ARCHITECTURE DIAGRAM */}
+        <div style={{ display: 'flex', alignItems: 'stretch', justifyContent: 'center', gap: 16, width: '100%' }}>
+          
+          {/* CLIENT TIER */}
+          <motion.div variants={vUp} custom={1} style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 20, borderRadius: 16, background: 'color-mix(in srgb, var(--amber) 8%, var(--surface))', border: '2px solid color-mix(in srgb, var(--amber) 30%, transparent)', position: 'relative' }}>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6, textAlign: 'center' }}>Tier 1</div>
+            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--amber)', marginBottom: 16, textAlign: 'center' }}>Client Layer</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {['React SPA (Dashboard)', '@locelith/react SDK', 'CLI Tool (npx locelith)', 'Marketing Website'].map(item => (
+                <div key={item} style={{ fontSize: '0.75rem', color: 'var(--t2)', background: 'var(--surface)', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>{item}</div>
+              ))}
             </div>
-          ))}
+          </motion.div>
+
+          {/* ARROW */}
+          <motion.div variants={vFade} custom={1.5} style={{ display: 'flex', alignItems: 'center', color: 'var(--border2)' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline><polyline points="10 18 4 12 10 6"></polyline></svg>
+          </motion.div>
+
+          {/* BACKEND TIER (Gateway + Services) */}
+          <motion.div variants={vUp} custom={2} style={{ flex: 1.2, display: 'flex', flexDirection: 'column', padding: 20, borderRadius: 16, background: 'color-mix(in srgb, var(--blue) 8%, var(--surface))', border: '2px solid color-mix(in srgb, var(--blue) 30%, transparent)', position: 'relative' }}>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6, textAlign: 'center' }}>Tier 2</div>
+            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--blue)', marginBottom: 16, textAlign: 'center' }}>Application Logic</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ background: 'var(--surface)', padding: '12px', borderRadius: 8, border: '1px solid var(--blue)' }}>
+                <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--blue)', marginBottom: 4, textAlign: 'center' }}>API Gateway</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--t3)', textAlign: 'center' }}>JWT Auth · HMAC-SHA256 · Rate Limiting</div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--border2)" strokeWidth="2"><line x1="12" y1="2" x2="12" y2="22"></line><polyline points="18 16 12 22 6 16"></polyline><polyline points="6 8 12 2 18 8"></polyline></svg>
+              </div>
+              <div style={{ background: 'var(--surface)', padding: '12px', borderRadius: 8, border: '1px solid var(--cyan)' }}>
+                <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--cyan)', marginBottom: 4, textAlign: 'center' }}>Service Layer</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--t3)', textAlign: 'center' }}>Vault Server (AST / PII / GDPR)<br/>Locelith SLM Inference (FastAPI)</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ARROW */}
+          <motion.div variants={vFade} custom={2.5} style={{ display: 'flex', alignItems: 'center', color: 'var(--border2)' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline><polyline points="10 18 4 12 10 6"></polyline></svg>
+          </motion.div>
+
+          {/* DATA TIER */}
+          <motion.div variants={vUp} custom={3} style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 20, borderRadius: 16, background: 'color-mix(in srgb, var(--green) 8%, var(--surface))', border: '2px solid color-mix(in srgb, var(--green) 30%, transparent)', position: 'relative' }}>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6, textAlign: 'center' }}>Tier 3</div>
+            <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--green)', marginBottom: 16, textAlign: 'center' }}>Persistence</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {['PostgreSQL (Prisma)', 'MongoDB (Translations)', 'Railway Volume Cache'].map(item => (
+                <div key={item} style={{ fontSize: '0.75rem', color: 'var(--t2)', background: 'var(--surface)', padding: '10px 12px', borderRadius: 8, border: '1px solid var(--border)', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 48, boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </Slide>
@@ -101,16 +122,16 @@ export function S16Vault() {
       <div className="cols-2" style={{ gap: 48, alignItems: 'center' }}>
         <motion.div variants={vUp} custom={0}>
           <div className="eyebrow">Core Component — Vault Server</div>
-          <h2 className="title-md" style={{ marginBottom: 20 }}>The AST pipeline is the<br /><span style={{ color: 'var(--blue)' }}>engineering heart</span> of Locelith.</h2>
+          <h2 className="title-md" style={{ marginBottom: 20 }}>More than just an<br /><span style={{ color: 'var(--blue)' }}>AST pipeline.</span></h2>
           <p className="body-sm" style={{ marginBottom: 24 }}>
-            A multi-stage Express.js server with a Babel AST scanner, PII sanitisation, HMAC auth, and AST-based code rewriter. Supports React, Angular, and Vanilla JS via the <strong>Strategy pattern</strong>.
+            The Vault is the central intelligence of Locelith. It acts as an Express.js secure proxy that not only drives the translation pipeline, but also orchestrates API key security, GDPR data erasure, and database management.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {[
-              { label: 'Authentication', val: 'HMAC-SHA256 · 5-min replay-prevention window' },
-              { label: 'AST Parser', val: '@babel/parser — walks JSX tree, extracts string nodes' },
+              { label: 'Security Core', val: 'HMAC-SHA256 Auth · Replay attack prevention' },
+              { label: 'Data Manager', val: 'GDPR cascading deletion · Project management' },
               { label: 'Cache Strategy', val: 'JSON file (L1) → PostgreSQL (L2) → SLM inference' },
-              { label: 'PII Guard', val: 'Regex masks emails, phones, cards with reversible placeholders' },
+              { label: 'PII Guard', val: 'Regex masks emails, phones, cards before inference' },
               { label: 'Design Pattern', val: 'Strategy — per-framework scanner & replacer classes' },
             ].map(item => (
               <div key={item.label} style={{ display: 'flex', gap: 0, borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}>
@@ -121,16 +142,16 @@ export function S16Vault() {
           </div>
         </motion.div>
         <motion.div variants={vUp} custom={1}>
-          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>5-Stage Pipeline</div>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: '0.65rem', color: 'var(--t4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 14 }}>Core Translation Workflow</div>
           <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 14 }}>
             {/* Vertical connecting line */}
             <div style={{ position: 'absolute', left: 19, top: 20, bottom: 20, width: 2, background: 'var(--border2)', zIndex: 0 }} />
             
             {[
-              { step: '1', label: 'Framework Detection', desc: 'package.json inspection → select Strategy', color: 'var(--blue)' },
+              { step: '1', label: 'Framework Detection', desc: 'package.json inspection → selects Strategy', color: 'var(--blue)' },
               { step: '2', label: 'AST Scan', desc: 'Babel parser walks JSX tree, extracts strings', color: 'var(--blue)' },
-              { step: '3', label: 'PII Sanitise', desc: 'Masks emails, phones, card numbers with placeholders', color: 'var(--purple)' },
-              { step: '4', label: 'SLM Translate', desc: '3-level cache: JSON → PostgreSQL → SLM inference', color: 'var(--cyan)' },
+              { step: '3', label: 'PII Sanitise', desc: 'Masks sensitive data with reversible placeholders', color: 'var(--purple)' },
+              { step: '4', label: 'SLM Inference', desc: 'Queries cache, translates missing strings via AI', color: 'var(--cyan)' },
               { step: '5', label: 'AST Rewrite', desc: "Injects t('key') + useTranslation imports into source", color: 'var(--green)' },
             ].map((s, i) => (
               <motion.div key={s.step} variants={vLeft} custom={i + 2} style={{ display: 'flex', gap: 16, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -160,7 +181,7 @@ export function S17SDK() {
         </motion.div>
         <div className="cols-2" style={{ gap: 16, marginBottom: 20 }}>
           {[
-            { pkg: '@locelith/core', abbr: 'CLI', color: 'var(--blue)', cmds: ['init', 'translate', 'scan', 'replace', 'backup'], desc: 'The CLI engine — 5 commands covering the full pipeline from initialisation to source code rewriting, backup and GDPR cleanup.' },
+            { pkg: '@locelith/core', abbr: 'CLI', color: 'var(--blue)', cmds: ['init', 'translate', 'scan', 'replace', 'backup'], desc: 'Developer-facing CLI. Scaffolds configs (init), executes full pipeline (translate), runs isolated stages (scan, replace), and snaps states (backup).' },
             { pkg: '@locelith/react', abbr: 'R', color: '#00D8FF', cmds: ['<LocelithProvider>', 'useTranslation()', '<LanguageSelector />'], desc: 'React Context provider + runtime hook. Zero-reload language switching with lazy-loaded locale bundles.' },
             { pkg: 'locelith-angular', abbr: 'A', color: '#DD0031', cmds: ['locelithTranslate (pipe)', 'LocelithModule', 'Angular DI'], desc: 'Angular module with a declarative template pipe. Fully compatible with Angular dependency injection.' },
             { pkg: '@locelith/vanilla', abbr: 'JS', color: 'var(--amber)', cmds: ['locelith.t("key")', 'ESM + CJS dual output'], desc: 'Zero-dependency JS API. Works in any JavaScript environment including legacy apps.' },
