@@ -105,8 +105,8 @@ export function S03Stat() {
             <div className="stat-label">of consumers prefer their native language</div>
           </div>
           <div className="stat-block">
-            <div className="stat-value" style={{ color: 'var(--cyan)' }}><Num value={7600} suffix="" prefix="$" /></div>
-            <div className="stat-label">global localisation market size (billions)</div>
+            <div className="stat-value" style={{ color: 'var(--cyan)' }}><Num value={76} suffix="B" prefix="$" /></div>
+            <div className="stat-label">global localisation market size</div>
           </div>
         </motion.div>
 
