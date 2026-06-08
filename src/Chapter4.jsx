@@ -24,7 +24,7 @@ export function S15Architecture() {
       name: 'Client Layer',
       color: 'var(--amber)',
       tag: 'Frontend',
-      items: ['React SPA (Dashboard + Marketing)', '@locelith/react SDK', 'CLI Tool (npx locelith)', 'Marketing Website (Vite 5)'],
+      items: ['React SPA (Dashboard + Marketing)', '@locelith/react · /angular · /vanilla SDK', 'CLI Tool (npx locelith)', 'Marketing Website (Vite 5)'],
     },
     {
       name: 'API Gateway',
@@ -36,13 +36,13 @@ export function S15Architecture() {
       name: 'Service Layer',
       color: 'var(--cyan)',
       tag: 'Core Services',
-      items: ['Vault Server (AST + PII + Cache + Rewriter)', 'SLM Inference Server (FastAPI + llama.cpp)', 'Web Scraping Pipeline (Axios/Cheerio)'],
+      items: ['Vault Server — AST · PII · Cache · Rewriter · GDPR', 'Alibaba Cloud AI (primary) + Groq Cloud (fallback)', 'Web Scraping Pipeline (Axios/Cheerio + MongoDB)'],
     },
     {
       name: 'Persistence Layer',
       color: 'var(--green)',
       tag: 'Data',
-      items: ['PostgreSQL via Prisma (Users, Billing, API Keys)', 'MongoDB via Mongoose (Translations, Locales)', 'JSON Cache on Railway Volume (L1 cache)'],
+      items: ['PostgreSQL via Prisma (Users, Billing, API Keys)', 'MongoDB via Mongoose (Translations, Locales)', 'JSON Cache on Railway Volume (L1 zero-latency)'],
     },
   ];
 
