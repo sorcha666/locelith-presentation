@@ -52,7 +52,7 @@ export function S15Architecture() {
             </div>
             <div style={{ padding: '12px 14px', borderRadius: 10, background: 'color-mix(in srgb, var(--blue) 8%, var(--surface))', border: '2px solid color-mix(in srgb, var(--blue) 30%, transparent)', textAlign: 'center', flex: 1 }}>
               <div style={{ fontFamily: 'var(--mono)', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 800, marginBottom: 4 }}>@locelith/core CLI</div>
-              <div style={{ fontSize: '0.63rem', color: 'var(--t3)' }}>init · translate · scan · replace · backup</div>
+              <div style={{ fontSize: '0.63rem', color: 'var(--t3)' }}>init · run · scan · replace · backup</div>
             </div>
             <div style={{ padding: '12px 14px', borderRadius: 10, background: 'color-mix(in srgb, var(--cyan) 8%, var(--surface))', border: '2px solid color-mix(in srgb, var(--cyan) 30%, transparent)', textAlign: 'center', flex: 1 }}>
               <div style={{ fontWeight: 800, color: 'var(--cyan)', marginBottom: 6, fontSize: '0.82rem' }}>Runtime SDK Packages</div>

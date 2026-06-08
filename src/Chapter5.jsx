@@ -65,7 +65,7 @@ export function S21Terminal() {
               <span style={{ marginLeft: 10, fontFamily: 'var(--mono)', fontSize: '0.68rem', color: '#64748B' }}>bash — my-react-app</span>
             </div>
             <div className="term-body">
-              <div className="term-line"><span className="tc-prompt">$ </span><span className="tc-cmd"><Type text="npx locelith translate --langs=fr,es,ar" delay={500} /></span></div>
+              <div className="term-line"><span className="tc-prompt">$ </span><span className="tc-cmd"><Type text="npx locelith run --langs=fr,es,ar" delay={500} /></span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">Framework detected: React 18 (JSX)</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">AST scan complete — 247 strings extracted</span></div>
               <div className="term-line"><span className="tc-ok">✔</span> <span className="tc-info">PII sanitised (2 email addresses masked)</span></div>
