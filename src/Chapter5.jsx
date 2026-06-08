@@ -136,52 +136,56 @@ export function S20SLMPipeline() {
 export function S21Benchmark() {
   return (
     <Slide id="s21" className="slide slide-light">
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
-        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 16 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <motion.div variants={vUp} custom={0} style={{ textAlign: 'center', marginBottom: 12, flexShrink: 0 }}>
           <div className="eyebrow" style={{ justifyContent: 'center' }}>Multi-Scale Evaluation</div>
           <h2 className="title-md">Finding the <span className="grad">Capacity Threshold.</span></h2>
-          <p style={{ margin: '4px auto 0', maxWidth: 800, fontSize: '0.78rem', color: 'var(--t3)' }}>Evaluated on a 510-pair held-out benchmark across 5 parameter scales. At 0.5B, the model collapses due to insufficient attention heads for 112 languages.</p>
         </motion.div>
 
         {/* Charts Grid with Embedded Metrics */}
-        <motion.div variants={vUp} custom={1} style={{ display: 'flex', justifyContent: 'center', gap: 16, flex: 1 }}>
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', gap: 14, flex: 1, minHeight: 0 }}>
           {[
             { scale: '0.5B', img: '/0_5b_chart.png', bleu: '12.45', chrf: '35.60', vram: '~0.8 GB', verdict: 'Capacity Collapse', color: 'var(--red)' },
             { scale: '1.5B', img: '/1_5b_chart.png', bleu: '40.78', chrf: '72.61', vram: '~1.5 GB', verdict: 'Underpowered', color: 'var(--amber)' },
-            { scale: '3B', img: '/3b_chart.png', bleu: '48.21', chrf: '76.14', vram: '~2.8 GB', verdict: 'Moderate, Lacks Depth', color: 'var(--t3)' },
-            { scale: '7B', img: '/7b_chart.png', bleu: '61.34', chrf: '83.42', vram: '~5.8 GB', verdict: 'Winner — Optimal', color: 'var(--green)', glow: true },
-            { scale: '14B', img: '/14b_chart.png', bleu: '65.10', chrf: '85.91', vram: '~11.0 GB', verdict: 'Exceeds 4GB Target', color: 'var(--blue)' },
+            { scale: '3B', img: '/3b_chart.png', bleu: '48.21', chrf: '76.14', vram: '~2.8 GB', verdict: 'Moderate', color: 'var(--t3)' },
+            { scale: '7B', img: '/7b_chart.png', bleu: '61.34', chrf: '83.42', vram: '~5.8 GB', verdict: '🏆 Winner', color: 'var(--green)', glow: true },
+            { scale: '14B', img: '/14b_chart.png', bleu: '65.10', chrf: '85.91', vram: '~11.0 GB', verdict: 'Exceeds VRAM', color: 'var(--blue)' },
           ].map(c => (
             <div key={c.scale} style={{ 
               background: c.glow ? 'rgba(16,185,129,0.05)' : '#fff', 
               borderRadius: 14, 
-              padding: 18, 
+              padding: '12px 12px 10px', 
               border: c.glow ? '2px solid var(--green)' : '1px solid var(--border)', 
               textAlign: 'center', 
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
+              minHeight: 0,
               boxShadow: c.glow ? '0 8px 30px rgba(16,185,129,0.15)' : 'none'
             }}>
-              <div style={{ fontSize: '1.1rem', fontWeight: 900, marginBottom: 8, color: c.glow ? 'var(--green)' : 'var(--t1)' }}>{c.scale}</div>
-              <img src={c.img} alt={`${c.scale} Benchmark`} style={{ width: '100%', height: 'auto', borderRadius: 6, marginBottom: 16, border: '1px solid var(--border2)' }} />
+              <div style={{ fontSize: '1rem', fontWeight: 900, marginBottom: 6, flexShrink: 0, color: c.glow ? 'var(--green)' : 'var(--t1)' }}>{c.scale}</div>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 6px', marginBottom: 16, textAlign: 'left', padding: '0 8px' }}>
-                <div style={{ fontSize: '0.7rem', color: 'var(--t3)' }}>BLEU</div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.bleu}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--t3)' }}>chrF</div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.chrf}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--t3)' }}>VRAM</div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'right', fontFamily: 'var(--mono)' }}>{c.vram}</div>
+              {/* Image — grows to fill available space */}
+              <div style={{ flex: 1, minHeight: 0, display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+                <img src={c.img} alt={`${c.scale} Benchmark`} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 6, border: '1px solid var(--border2)' }} />
+              </div>
+              
+              {/* Compact Metrics */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 6px', marginBottom: 8, textAlign: 'left', flexShrink: 0 }}>
+                <div style={{ fontSize: '0.65rem', color: 'var(--t3)' }}>BLEU</div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.bleu}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--t3)' }}>chrF</div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, textAlign: 'right', color: 'var(--t1)' }}>{c.chrf}</div>
               </div>
 
               <div style={{ 
                 background: `color-mix(in srgb, ${c.color} 15%, transparent)`, 
                 color: c.color, 
-                padding: '8px 0', 
+                padding: '6px 0', 
                 borderRadius: 6, 
-                fontSize: '0.75rem', 
-                fontWeight: 800 
+                fontSize: '0.72rem', 
+                fontWeight: 800,
+                flexShrink: 0
               }}>
                 {c.verdict}
               </div>
@@ -192,6 +196,7 @@ export function S21Benchmark() {
     </Slide>
   );
 }
+
 
 /* ─── S22: DEPLOYMENT & BUGS ─── */
 export function S22Deployment() {
