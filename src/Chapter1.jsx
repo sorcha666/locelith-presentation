@@ -72,10 +72,6 @@ export function S03Stat() {
             <div className="stat-value" style={{ color: 'var(--blue)' }}><Num value={72.4} suffix="%" /></div>
             <div className="stat-label">of consumers prefer their native language</div>
           </div>
-          <div className="stat-block" style={{ marginBottom: 40 }}>
-            <div className="stat-value" style={{ color: 'var(--purple)' }}><Num value={40} suffix="%" /></div>
-            <div className="stat-label">higher conversion with localised UIs</div>
-          </div>
           <div className="stat-block">
             <div className="stat-value" style={{ color: 'var(--cyan)' }}><Num value={7600} suffix="" prefix="$" /></div>
             <div className="stat-label">global localisation market size (billions)</div>

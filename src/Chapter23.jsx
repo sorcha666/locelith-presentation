@@ -75,7 +75,6 @@ export function S09Comparison() {
     { f: 'UI-domain AI translation',     manual: false, api: null,  crowdin: null,  i18n: false, locelith: true },
     { f: 'Source code transformation',   manual: false, api: false, crowdin: false, i18n: false, locelith: true },
     { f: 'On-premise inference',         manual: null,  api: false, crowdin: false, i18n: null,  locelith: true },
-    { f: 'Zero per-character cost',      manual: true,  api: false, crowdin: false, i18n: true,  locelith: true },
     { f: '112+ languages',               manual: null,  api: true,  crowdin: true,  i18n: null,  locelith: true },
     { f: 'Full pipeline automation',     manual: false, api: false, crowdin: false, i18n: false, locelith: true },
   ];
