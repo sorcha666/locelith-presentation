@@ -143,7 +143,7 @@ export function S21Benchmark() {
         </motion.div>
 
         {/* Charts Grid with Embedded Metrics */}
-        <motion.div variants={vUp} custom={1} style={{ display: 'flex', gap: 14, flex: 1, minHeight: 0 }}>
+        <motion.div variants={vUp} custom={1} style={{ display: 'flex', gap: 14, flex: 1, minHeight: 0, alignItems: 'stretch' }}>
           {[
             { scale: '0.5B', img: '/0_5b_chart.png', bleu: '12.45', chrf: '35.60', vram: '~0.8 GB', verdict: 'Capacity Collapse', color: 'var(--red)' },
             { scale: '1.5B', img: '/1_5b_chart.png', bleu: '40.78', chrf: '72.61', vram: '~1.5 GB', verdict: 'Underpowered', color: 'var(--amber)' },
@@ -160,7 +160,7 @@ export function S21Benchmark() {
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
-              minHeight: 0,
+              minHeight: 380,
               boxShadow: c.glow ? '0 8px 30px rgba(16,185,129,0.15)' : 'none'
             }}>
               <div style={{ fontSize: '1rem', fontWeight: 900, marginBottom: 6, flexShrink: 0, color: c.glow ? 'var(--green)' : 'var(--t1)' }}>{c.scale}</div>
