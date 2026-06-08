@@ -7,7 +7,7 @@ import NotesPanel from './Notes';
 import { S01Cover, S01bAgenda, S02Ch1Intro, S03Stat } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
-import { S19Ch5Intro, S20Data, S21Benchmark, S22Training, S23Deployment } from './Chapter5';
+import { S19Ch5Intro, S20SLMPipeline } from './Chapter5';
 import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
 
 const SLIDES = [
@@ -24,10 +24,7 @@ const SLIDES = [
   { id: 's15', ch: 4, label: 'Architecture' },
   { id: 's16', ch: 4, label: 'Pipeline' },
   { id: 's19', ch: 5, label: 'Ch.5 SLM' },
-  { id: 's20', ch: 5, label: 'Data Prep' },
-  { id: 's21', ch: 5, label: 'Benchmark' },
-  { id: 's22', ch: 5, label: 'Training' },
-  { id: 's23', ch: 5, label: 'Deployment' },
+  { id: 's20', ch: 5, label: 'SLM Pipeline' },
   { id: 's29', ch: 6, label: 'Ch.6 Concl.' },
   { id: 's30', ch: 6, label: 'Achievements' },
   { id: 's31', ch: 6, label: 'Perspectives' },
@@ -209,10 +206,7 @@ export default function App() {
         <S15Architecture />
         <S16Vault />
         <S19Ch5Intro />
-        <S20Data />
-        <S21Benchmark />
-        <S22Training />
-        <S23Deployment />
+        <S20SLMPipeline />
         <S29Ch7Intro />
         <S30Achievements />
         <S31Perspectives />
