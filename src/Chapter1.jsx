@@ -60,7 +60,7 @@ export function S01bAgenda() {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {[
-            { num: '01', title: 'General Context', desc: 'The globalisation imperative and localisation tax' },
+            { num: '01', title: 'Problematic', desc: 'The globalisation imperative and localisation tax' },
             { num: '02', title: 'State of the Art', desc: 'Existing solutions, workflows, and their limitations' },
             { num: '03', title: 'System Specifications', desc: 'Functional and non-functional requirements' },
             { num: '04', title: 'Architecture & Design', desc: 'Locelith Vault, CLI, SaaS platform, and AST pipeline' },
@@ -87,8 +87,8 @@ export function S02Ch1Intro() {
       <div style={{ textAlign: 'center' }}>
         <motion.div variants={vUp} custom={0}>
           <div className="ch-badge">Chapter 01</div>
-          <h2 className="title-lg" style={{ marginBottom: 16 }}><span className="grad">General Context</span></h2>
-          <p className="subtitle" style={{ margin: '0 auto' }}>Understanding the globalisation imperative and why software localisation is a strategic engineering challenge.</p>
+          <h2 className="title-lg" style={{ marginBottom: 16 }}><span className="grad">Problematic</span></h2>
+          <p className="subtitle" style={{ margin: '0 auto' }}>Understanding the globalisation imperative and why software localisation remains a broken engineering challenge.</p>
         </motion.div>
       </div>
     </Slide>

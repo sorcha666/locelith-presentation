@@ -13,7 +13,7 @@ import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Cha
 const SLIDES = [
   { id: 's01', ch: 0, label: 'Cover' },
   { id: 's01b', ch: 0, label: 'Agenda' },
-  { id: 's02', ch: 1, label: 'Ch.1 Context' },
+  { id: 's02', ch: 1, label: 'Ch.1 Problematic' },
   { id: 's03', ch: 1, label: 'Impact' },
   { id: 's07', ch: 2, label: 'Ch.2 SoA' },
   { id: 's08', ch: 2, label: 'Workflow' },
