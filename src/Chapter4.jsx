@@ -36,7 +36,7 @@ export function S15Architecture() {
       name: 'Service Layer',
       color: 'var(--cyan)',
       tag: 'Core Services',
-      items: ['Vault Server — AST · PII · Cache · Rewriter · GDPR', 'Alibaba Cloud AI (primary) + Groq Cloud (fallback)', 'Web Scraping Pipeline (Axios/Cheerio + MongoDB)'],
+      items: ['Vault Server — AST · PII · Cache · Rewriter · GDPR', 'Locelith SLM (FastAPI primary) + Groq Cloud (fallback)', 'Web Scraping Pipeline (Axios/Cheerio + MongoDB)'],
     },
     {
       name: 'Persistence Layer',
@@ -51,7 +51,7 @@ export function S15Architecture() {
       <div className="cols-2" style={{ gap: 56, alignItems: 'center' }}>
         <motion.div variants={vUp} custom={0}>
           <div className="eyebrow">Global Architecture</div>
-          <h2 className="title-md" style={{ marginBottom: 16 }}>Three-tier design.<br /><span className="grad">Zero single point of failure.</span></h2>
+          <h2 className="title-md" style={{ marginBottom: 16 }}>Four-layer architecture.<br /><span className="grad">Zero single point of failure.</span></h2>
           <p className="body-sm" style={{ marginBottom: 28 }}>
             An independent micro-service design: three Node.js processes, one FastAPI inference server, and a dual-database persistence strategy — all connected through authenticated HTTP.
           </p>
