@@ -175,17 +175,63 @@ export function S17SDK() {
   return (
     <Slide id="s17" className="slide slide-light">
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'center' }}>
-        <motion.div variants={vUp} custom={0} style={{ marginBottom: 36 }}>
+        <motion.div variants={vUp} custom={0} style={{ marginBottom: 28 }}>
           <div className="eyebrow">SDK Architecture</div>
           <h2 className="title-md">Four packages. Every framework.<br /><span className="grad">One pipeline command.</span></h2>
         </motion.div>
-          ].map(p => (
-            <div key={p.label} style={{ flex: 1, padding: '10px 14px', borderRadius: 10, background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.12)', textAlign: 'center' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.75rem', color: 'var(--blue)', marginBottom: 3 }}>{p.label}</div>
-              <div style={{ fontSize: '0.66rem', color: 'var(--t4)' }}>{p.desc}</div>
+
+        <div className="cols-2" style={{ gap: 24, alignItems: 'stretch' }}>
+          {/* LEFT: CLI CORE */}
+          <motion.div variants={vLeft} custom={1} className="card" style={{ padding: 24, borderTop: '4px solid var(--blue)', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <div style={{ width: 42, height: 42, borderRadius: 8, background: 'color-mix(in srgb, var(--blue) 15%, transparent)', color: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontFamily: 'var(--mono)', fontSize: '0.85rem' }}>CLI</div>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '1rem', fontWeight: 700, color: 'var(--blue)' }}>@locelith/core</div>
             </div>
-          ))}
-        </motion.div>
+            <p className="body-sm" style={{ marginBottom: 16 }}>
+              Developer-facing CLI. Bundled with <strong>Rollup</strong> and obfuscated with <strong>javascript-obfuscator</strong> for IP protection.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+              {[
+                { cmd: 'npx locelith init', desc: 'Scaffolds configuration & installs dependencies' },
+                { cmd: 'npx locelith translate --langs=fr,es,ar', desc: 'Full pipeline: upload → scan → translate → replace' },
+                { cmd: 'npx locelith scan', desc: 'Extraction stage only — for inspection' },
+                { cmd: 'npx locelith replace', desc: 'Code replacement stage only' },
+                { cmd: 'npx locelith backup', desc: 'Snapshot current state before modifications' },
+              ].map(c => (
+                <div key={c.cmd} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px' }}>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: '0.72rem', color: 'var(--t2)', marginBottom: 3, fontWeight: 700 }}>{c.cmd}</div>
+                  <div style={{ fontSize: '0.68rem', color: 'var(--t3)' }}>{c.desc}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* RIGHT: RUNTIME SDKs */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[
+              { pkg: '@locelith/react', color: '#00D8FF', cmds: ['<LocelithProvider>', 'useTranslation()'], desc: 'React Context provider + hook. Zero-reload language switching with lazy-loaded locale bundles.' },
+              { pkg: 'locelith-angular', color: '#DD0031', cmds: ['locelithTranslate (pipe)', 'LocelithModule'], desc: 'Declarative template pipe, fully compatible with Angular dependency injection.' },
+              { pkg: '@locelith/vanilla', color: 'var(--amber)', cmds: ['locelith.t("key")', 'ESM + CJS dual output'], desc: 'Zero-dependency JS API. Works in any JS environment including legacy apps.' },
+            ].map((s, i) => (
+              <motion.div key={s.pkg} variants={vLeft} custom={i + 2} className="card" style={{ padding: '16px 20px', borderLeft: `4px solid ${s.color}`, flex: 1 }}>
+                <div style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', fontWeight: 700, color: s.color, marginBottom: 6 }}>{s.pkg}</div>
+                <p className="body-xs" style={{ marginBottom: 10, lineHeight: 1.5 }}>{s.desc}</p>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {s.cmds.map(c => <span key={c} style={{ fontFamily: 'var(--mono)', fontSize: '0.62rem', background: 'var(--bg2)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4, color: 'var(--t3)' }}>{c}</span>)}
+                </div>
+              </motion.div>
+            ))}
+
+            <motion.div variants={vUp} custom={5} style={{ padding: '12px 16px', borderRadius: 12, background: 'rgba(37,99,235,0.04)', border: '1px solid rgba(37,99,235,0.15)', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ fontWeight: 800, fontSize: '0.7rem', color: 'var(--blue)', textTransform: 'uppercase', letterSpacing: '0.1em', flexShrink: 0 }}>Patterns</div>
+              <div style={{ display: 'flex', gap: '6px 12px', flexWrap: 'wrap' }}>
+                {['Strategy', 'Observer (SSE)', 'Repository', 'Facade', 'Command'].map(p => (
+                  <span key={p} style={{ fontSize: '0.74rem', color: 'var(--t2)' }}>· {p}</span>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </Slide>
   );
