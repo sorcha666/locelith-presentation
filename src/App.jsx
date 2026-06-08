@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Background from './Background';
 import NotesPanel from './Notes';
 
-import { S01Cover, S02Ch1Intro, S03Stat } from './Chapter1';
+import { S01Cover, S01bAgenda, S02Ch1Intro, S03Stat } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
 import { S19Ch5Intro, S20Data, S21Benchmark, S22Training, S23Deployment } from './Chapter5';
@@ -12,6 +12,7 @@ import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Cha
 
 const SLIDES = [
   { id: 's01', ch: 0, label: 'Cover' },
+  { id: 's01b', ch: 0, label: 'Agenda' },
   { id: 's02', ch: 1, label: 'Ch.1 Context' },
   { id: 's03', ch: 1, label: 'Impact' },
   { id: 's07', ch: 2, label: 'Ch.2 SoA' },
@@ -196,6 +197,7 @@ export default function App() {
       {/* All slides */}
       <main>
         <S01Cover />
+        <S01bAgenda />
         <S02Ch1Intro />
         <S03Stat />
         <S07Ch2Intro />

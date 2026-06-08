@@ -49,13 +49,45 @@ export function S01Cover() {
   );
 }
 
+export function S01bAgenda() {
+  return (
+    <Slide id="s01b" className="slide slide-lighter">
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <motion.div variants={vUp} custom={0} style={{ marginBottom: 40 }}>
+          <div className="eyebrow">Presentation Overview</div>
+          <h2 className="title-md">Agenda</h2>
+        </motion.div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {[
+            { num: '01', title: 'General Context', desc: 'The globalisation imperative and localisation tax' },
+            { num: '02', title: 'State of the Art', desc: 'Existing solutions, workflows, and their limitations' },
+            { num: '03', title: 'System Specifications', desc: 'Functional and non-functional requirements' },
+            { num: '04', title: 'Architecture & Design', desc: 'Locelith Vault, CLI, SaaS platform, and AST pipeline' },
+            { num: '05', title: 'SLM Engineering', desc: 'Data prep, model benchmarking, LoRA training, and deployment' },
+            { num: '06', title: 'Conclusion & Perspectives', desc: 'Project achievements and future work' },
+          ].map((item, i) => (
+            <motion.div key={item.num} variants={vLeft} custom={i + 1} style={{ display: 'flex', gap: 20, alignItems: 'center', padding: '16px 20px', background: 'var(--surface)', borderRadius: 12, border: '1px solid var(--border)' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: '1.5rem', fontWeight: 800, color: 'var(--border2)' }}>{item.num}</div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--t1)', marginBottom: 4 }}>{item.title}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--t3)' }}>{item.desc}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
 export function S02Ch1Intro() {
   return (
     <Slide id="s02" className="slide slide-chapter">
       <div style={{ textAlign: 'center' }}>
         <motion.div variants={vUp} custom={0}>
           <div className="ch-badge">Chapter 01</div>
-          <h2 className="title-lg" style={{ marginBottom: 16 }}>General Context &amp;<br /><span className="grad">Host Organisation</span></h2>
+          <h2 className="title-lg" style={{ marginBottom: 16 }}><span className="grad">General Context</span></h2>
           <p className="subtitle" style={{ margin: '0 auto' }}>Understanding the globalisation imperative and why software localisation is a strategic engineering challenge.</p>
         </motion.div>
       </div>
