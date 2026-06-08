@@ -7,7 +7,7 @@ import NotesPanel from './Notes';
 import { S01Cover, S02Ch1Intro, S03Stat } from './Chapter1';
 import { S07Ch2Intro, S08Workflow, S11Ch3Intro, S12Actors, S13NFR } from './Chapter23';
 import { S14Ch4Intro, S15Architecture, S16Vault } from './Chapter4';
-import { S19Ch5Intro, S22Providers, S25SaaS } from './Chapter5';
+import { S19Ch5Intro, S25SaaS } from './Chapter5';
 import { S29Ch7Intro, S30Achievements, S31Perspectives, S32Closing } from './Chapter67';
 
 const SLIDES = [
@@ -23,7 +23,6 @@ const SLIDES = [
   { id: 's15', ch: 4, label: 'Architecture' },
   { id: 's16', ch: 4, label: 'Pipeline' },
   { id: 's19', ch: 5, label: 'Ch.5 Impl' },
-  { id: 's22', ch: 5, label: 'Providers' },
   { id: 's25', ch: 5, label: 'SaaS Platform' },
   { id: 's29', ch: 6, label: 'Ch.6 Concl.' },
   { id: 's30', ch: 6, label: 'Achievements' },
@@ -205,7 +204,6 @@ export default function App() {
         <S15Architecture />
         <S16Vault />
         <S19Ch5Intro />
-        <S22Providers />
         <S25SaaS />
         <S29Ch7Intro />
         <S30Achievements />
